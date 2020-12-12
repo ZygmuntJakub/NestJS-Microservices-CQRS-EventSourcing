@@ -23,6 +23,16 @@ services:
       - services-network-network
     volumes:
       - ./user-service:/src/
+  auth-service:
+    build: ./auth-service
+    restart: always
+    hostname: auth-service
+    env_file:
+      - .env
+    networks:
+      - services-network-network
+    volumes:
+      - ./auth-service:/src/
 networks:
   services-network-network:
     internal: true
