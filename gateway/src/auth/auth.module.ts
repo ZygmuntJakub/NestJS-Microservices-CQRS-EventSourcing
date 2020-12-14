@@ -4,17 +4,17 @@ import {
   ClientsModule,
   Transport,
 } from '@nestjs/microservices';
-import { USER_SERVICE } from '../app.constants';
-import { SignInController } from './sign-in.controller';
+import { AUTH_SERVICE } from '../app.constants';
+import { AuthController } from './auth.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from '../config/config';
 
 @Module({
   providers: [
     {
-      provide: USER_SERVICE,
+      provide: AUTH_SERVICE,
       useFactory: (configService: ConfigService) => {
-        const options = configService.get(USER_SERVICE);
+        const options = configService.get(AUTH_SERVICE);
         return ClientProxyFactory.create(options);
       },
       inject: [ConfigService],
@@ -26,11 +26,11 @@ import configuration from '../config/config';
     }),
     ClientsModule.register([
       {
-        name: USER_SERVICE,
+        name: AUTH_SERVICE,
         transport: Transport.TCP,
       },
     ]),
   ],
-  controllers: [SignInController],
+  controllers: [AuthController],
 })
-export class SignInModule {}
+export class AuthModule {}

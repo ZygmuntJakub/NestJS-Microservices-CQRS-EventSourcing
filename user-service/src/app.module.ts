@@ -1,15 +1,23 @@
 import { Module } from '@nestjs/common';
 import configuration from './config/config';
-import { ConfigModule } from '@nestjs/config';
-import { SignInController } from './sign-in/sign-in.controller';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UserModule } from './user/user.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { POSTGRES_CONFIG } from './app.constants';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       load: [configuration],
     }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (config: ConfigService) => config.get(POSTGRES_CONFIG),
+      inject: [ConfigService],
+    }),
+    UserModule,
   ],
-  controllers: [SignInController],
+  controllers: [],
   providers: [],
 })
 export class AppModule {}

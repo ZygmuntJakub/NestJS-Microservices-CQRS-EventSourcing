@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { SignInModule } from './sign-in/sign-in.module';
+import { AuthModule } from './auth/auth.module';
 import configuration from './config/config';
 
 @Module({
   imports: [
-    SignInModule,
+    AuthModule,
     ConfigModule.forRoot({
       load: [configuration],
     }),

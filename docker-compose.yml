@@ -7,12 +7,12 @@ services:
     env_file:
       - .env
     ports:
-      - "${GATEWAY_SERVICE_PORT}:${GATEWAY_SERVICE_PORT}"
+      - ${GATEWAY_SERVICE_PORT}:${GATEWAY_SERVICE_PORT}
     networks:
-      - services-network-network
+      - services-network
       - gateway-network
     volumes:
-      - ./gateway:/src/
+      - ./gateway:/gateway/
   user-service:
     build: ./user-service
     restart: always
@@ -20,9 +20,10 @@ services:
     env_file:
       - .env
     networks:
-      - services-network-network
+      - services-network
     volumes:
-      - ./user-service:/src/
+      - ./user-service:/user-service/
+      - /user-service/node_modules
   auth-service:
     build: ./auth-service
     restart: always
@@ -30,11 +31,27 @@ services:
     env_file:
       - .env
     networks:
-      - services-network-network
+      - services-network
+      - gateway-network
+    ports:
+      - ${AUTH_SERVICE_PORT}:${AUTH_SERVICE_PORT}
     volumes:
-      - ./auth-service:/src/
+      - ./auth-service:/auth-service/
+      - /auth-service/node_modules
+  user-service-db:
+    image: postgres
+    hostname: ${POSTGRES_USER_SERVICE_DB_HOSTNAME}
+    environment:
+      - POSTGRES_DB=${POSTGRES_USER_SERVICE_DB}
+      - POSTGRES_USER=${POSTGRES_USER_SERVICE_USERNAME}
+      - POSTGRES_PASSWORD=${POSTGRES_USER_SERVICE_PASSWORD}
+    ports:
+      - 22222:${POSTGRES_USER_SERVICE_DB_PORT}
+    networks:
+      - services-network
+      - gateway-network
 networks:
-  services-network-network:
+  services-network:
     internal: true
   gateway-network:
     driver: bridge
