@@ -52,6 +52,20 @@ services:
     volumes:
       - ./poll-service:/poll-service/
       - /poll-service/node_modules
+  answer-service:
+    build: ./answer-service
+    restart: always
+    hostname: answer-service
+    env_file:
+      - .env
+    networks:
+      - services-network
+      - gateway-network
+    ports:
+      - ${ANSWER_SERVICE_PORT}:${ANSWER_SERVICE_PORT}
+    volumes:
+      - ./answer-service:/answer-service/
+      - /answer-service/node_modules
 
 
   user-service-db:
@@ -75,6 +89,19 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_POLL_SERVICE_PASSWORD}
     ports:
       - 22223:${POSTGRES_POLL_SERVICE_DB_PORT}
+    networks:
+      - services-network
+      - gateway-network
+
+  answer-service-db:
+    image: postgres
+    hostname: ${POSTGRES_ANSWER_SERVICE_DB_HOSTNAME}
+    environment:
+      - POSTGRES_DB=${POSTGRES_ANSWER_SERVICE_DB}
+      - POSTGRES_USER=${POSTGRES_ANSWER_SERVICE_USERNAME}
+      - POSTGRES_PASSWORD=${POSTGRES_ANSWER_SERVICE_PASSWORD}
+    ports:
+      - 22224:${POSTGRES_ANSWER_SERVICE_DB_PORT}
     networks:
       - services-network
       - gateway-network
