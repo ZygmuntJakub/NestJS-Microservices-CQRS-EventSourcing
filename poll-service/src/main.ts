@@ -9,14 +9,14 @@ async function bootstrap() {
     {
       transport: Transport.TCP,
       options: {
-        port: 8082,
-        host: 'auth-service',
+        port: 8083,
+        host: 'poll-service',
       },
     },
   );
   const configService = app.get(ConfigService);
   const port = configService.get('port');
-  console.log(`Starting AUTH service on ${port}`);
+  console.log(`Starting POLL service on ${port}`);
   await app.listen(port);
 }
 bootstrap();
