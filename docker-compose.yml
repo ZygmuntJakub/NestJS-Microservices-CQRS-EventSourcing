@@ -66,6 +66,20 @@ services:
     volumes:
       - ./answer-service:/answer-service/
       - /answer-service/node_modules
+  result-service:
+    build: ./result-service
+    restart: always
+    hostname: result-service
+    env_file:
+      - .env
+    networks:
+      - services-network
+      - gateway-network
+    ports:
+      - ${RESULT_SERVICE_PORT}:${RESULT_SERVICE_PORT}
+    volumes:
+      - ./result-service:/result-service/
+      - /result-service/node_modules
 
 
   user-service-db:
@@ -102,6 +116,18 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_ANSWER_SERVICE_PASSWORD}
     ports:
       - 22224:${POSTGRES_ANSWER_SERVICE_DB_PORT}
+    networks:
+      - services-network
+      - gateway-network
+  result-service-db:
+    image: postgres
+    hostname: ${POSTGRES_RESULT_SERVICE_DB_HOSTNAME}
+    environment:
+      - POSTGRES_DB=${POSTGRES_RESULT_SERVICE_DB}
+      - POSTGRES_USER=${POSTGRES_RESULT_SERVICE_USERNAME}
+      - POSTGRES_PASSWORD=${POSTGRES_RESULT_SERVICE_PASSWORD}
+    ports:
+      - 22225:${POSTGRES_RESULT_SERVICE_DB_PORT}
     networks:
       - services-network
       - gateway-network
