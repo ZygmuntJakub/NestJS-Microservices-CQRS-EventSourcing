@@ -1,5 +1,19 @@
 version: '3'
 services:
+  rabbitmq:
+    image: rabbitmq:management-alpine
+    container_name: rabbitmq
+    hostname: rabbitmq
+    volumes:
+      - /var/lib/rabbitmq
+    ports:
+      - ${RABBITMQ_PORT}:${RABBITMQ_PORT}
+      - ${RABBITMQ_MG_PORT}:${RABBITMQ_MG_PORT}
+    env_file:
+      - .env
+    networks:
+      - services-network
+      - gateway-network
   gateway:
     build: ./gateway
     restart: always
@@ -13,6 +27,7 @@ services:
       - gateway-network
     volumes:
       - ./gateway:/gateway/
+#MICROSERVICES
   user-service:
     build: ./user-service
     restart: always
@@ -81,7 +96,7 @@ services:
       - ./result-service:/result-service/
       - /result-service/node_modules
 
-
+#DATABASES
   user-service-db:
     image: postgres
     hostname: ${POSTGRES_USER_SERVICE_DB_HOSTNAME}

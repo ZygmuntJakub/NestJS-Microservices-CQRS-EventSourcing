@@ -3,8 +3,7 @@ import { Module } from '@nestjs/common';
 import configuration from './config/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { POSTGRES_CONFIG } from './app.constants';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { PollsModule } from './polls/polls.module';
 
 @Module({
   imports: [
@@ -16,8 +15,9 @@ import { AppService } from './app.service';
       useFactory: (config: ConfigService) => config.get(POSTGRES_CONFIG),
       inject: [ConfigService],
     }),
+    PollsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
