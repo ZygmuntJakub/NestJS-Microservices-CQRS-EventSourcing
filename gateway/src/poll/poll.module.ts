@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { PollController } from './poll.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from '../config/config';
-import { POLL_SERVICE } from '../app.constants';
+import { AUTH_SERVICE, POLL_SERVICE } from '../app.constants';
 import { ClientProxyFactory } from '@nestjs/microservices';
 
 @Module({

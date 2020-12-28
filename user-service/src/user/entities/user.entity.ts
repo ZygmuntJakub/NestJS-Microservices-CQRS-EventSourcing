@@ -29,7 +29,7 @@ export class User extends BaseEntity {
   @IsEmail()
   email: string;
 
-  @ManyToMany((type) => Role)
+  @ManyToMany((type) => Role, { eager: true })
   @JoinTable({
     name: 'user_roles',
     joinColumn: {

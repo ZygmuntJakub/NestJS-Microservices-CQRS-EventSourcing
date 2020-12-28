@@ -1,18 +1,20 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Put,
-  Param,
+  Controller,
   Delete,
+  Get,
   Inject,
+  Param,
+  Post,
+  Put,
 } from '@nestjs/common';
 import { CreatePollDto } from './dto/create-poll.dto';
 import { UpdatePollDto } from './dto/update-poll.dto';
 import { ClientProxy } from '@nestjs/microservices';
 import { POLL_SERVICE } from '../app.constants';
 import { GET_POLLS_PATTERN } from '../app.patterns';
+import { Roles } from '../decorators/roles.decorators';
+import { Role } from '../enums/role.enum';
 
 @Controller('poll')
 export class PollController {
@@ -24,6 +26,7 @@ export class PollController {
   }
 
   @Get()
+  @Roles([Role.Admin])
   findAll() {
     return this.clientProxy.send(GET_POLLS_PATTERN, { msg: 'Hi' });
   }
