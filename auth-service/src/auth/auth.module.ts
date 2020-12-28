@@ -1,10 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import {
-  ClientProxyFactory,
-  ClientsModule,
-  Transport,
-} from '@nestjs/microservices';
+import { ClientProxyFactory } from '@nestjs/microservices';
 import { JWT_CONFIG, USER_SERVICE } from '../app.constants';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LocalStrategy } from './local.strategy';
@@ -16,7 +12,6 @@ import { PassportModule } from '@nestjs/passport';
 @Module({
   imports: [
     PassportModule,
-    ClientsModule.register([{ name: USER_SERVICE, transport: Transport.TCP }]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {
@@ -30,8 +25,9 @@ import { PassportModule } from '@nestjs/passport';
     {
       provide: USER_SERVICE,
       useFactory: (configService: ConfigService) => {
-        const options = configService.get(USER_SERVICE);
-        return ClientProxyFactory.create(options);
+        const config = configService.get(USER_SERVICE);
+
+        return ClientProxyFactory.create(config);
       },
       inject: [ConfigService],
     },
