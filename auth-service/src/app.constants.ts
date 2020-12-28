@@ -1,2 +1,3 @@
 export const USER_SERVICE = 'USER_SERVICE';
 export const JWT_CONFIG = 'JWT_CONFIG';
+export const RABBITMQ_CONFIG = 'RABBITMQ_CONFIG';

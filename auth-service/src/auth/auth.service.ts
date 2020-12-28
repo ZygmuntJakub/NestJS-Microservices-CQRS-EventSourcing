@@ -5,7 +5,7 @@ import {
   RequestTimeoutException,
 } from '@nestjs/common';
 import { USER_SERVICE } from '../app.constants';
-import { ClientProxy } from '@nestjs/microservices';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { JwtService } from '@nestjs/jwt';
 import { GET_USER_PATTERN } from '../app.patterns';
 import { catchError, timeout } from 'rxjs/operators';
@@ -38,7 +38,7 @@ export class AuthService {
       return null;
     } catch (e) {
       Logger.log(e);
-      throw e;
+      throw new RpcException('INVALID_CREDENTIALS');
     }
   }
 

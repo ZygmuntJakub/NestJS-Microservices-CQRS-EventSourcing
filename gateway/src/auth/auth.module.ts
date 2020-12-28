@@ -14,8 +14,9 @@ import configuration from '../config/config';
     {
       provide: AUTH_SERVICE,
       useFactory: (configService: ConfigService) => {
-        const options = configService.get(AUTH_SERVICE);
-        return ClientProxyFactory.create(options);
+        const config = configService.get(AUTH_SERVICE);
+
+        return ClientProxyFactory.create(config);
       },
       inject: [ConfigService],
     },
