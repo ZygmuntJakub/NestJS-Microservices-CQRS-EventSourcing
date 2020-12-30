@@ -24,8 +24,9 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    if (this.checkIsPublic(context)) return true;
     const req = context.switchToHttp().getRequest();
+    Logger.log(`Start request from ${req.ip}`);
+    if (this.checkIsPublic(context)) return true;
     try {
       if (!req.headers['authorization']) return false;
       const res = await this.client
@@ -44,13 +45,10 @@ export class AuthGuard implements CanActivate {
   }
 
   checkIsPublic(context: ExecutionContext) {
-    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+    return this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
     ]);
-    if (isPublic) {
-      return true;
-    }
   }
 
   getRoles(context: ExecutionContext) {

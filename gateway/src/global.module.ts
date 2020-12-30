@@ -32,6 +32,6 @@ import { ClientProxyFactory } from '@nestjs/microservices';
       inject: [ConfigService],
     },
   ],
-  exports: [AUTH_SERVICE],
+  exports: [AUTH_SERVICE, ConfigModule],
 })
 export class GlobalModule {}

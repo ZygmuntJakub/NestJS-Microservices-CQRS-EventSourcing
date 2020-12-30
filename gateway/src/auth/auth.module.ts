@@ -6,8 +6,7 @@ import {
 } from '@nestjs/microservices';
 import { AUTH_SERVICE } from '../app.constants';
 import { AuthController } from './auth.controller';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import configuration from '../config/config';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   providers: [
@@ -21,17 +20,7 @@ import configuration from '../config/config';
       inject: [ConfigService],
     },
   ],
-  imports: [
-    ConfigModule.forRoot({
-      load: [configuration],
-    }),
-    ClientsModule.register([
-      {
-        name: AUTH_SERVICE,
-        transport: Transport.TCP,
-      },
-    ]),
-  ],
+  imports: [],
   controllers: [AuthController],
 })
 export class AuthModule {}

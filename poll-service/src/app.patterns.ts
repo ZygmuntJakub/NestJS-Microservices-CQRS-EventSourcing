@@ -1,1 +1,1 @@
-export const GET_POLLS_PATTERN = { role: 'user', cmd: 'get-polls' };
+export const GET_POLLS_PATTERN = { role: 'poll', cmd: 'get-polls' };

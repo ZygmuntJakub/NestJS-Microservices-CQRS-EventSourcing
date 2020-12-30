@@ -1,7 +1,7 @@
-import { POSTGRES_CONFIG } from '../app.constants';
+import { POSTGRES_CONFIG, RABBITMQ_CONFIG } from '../app.constants';
+import { Transport } from '@nestjs/microservices';
 
 export default () => ({
-  port: parseInt(process.env.ANSWER_SERVICE_PORT, 10) || 3000,
   [POSTGRES_CONFIG]: {
     type: 'postgres',
     host: process.env.POSTGRES_ANSWER_SERVICE_DB_HOSTNAME,
@@ -12,5 +12,18 @@ export default () => ({
     synchronize: true,
     logging: true,
     entities: ['dist/**/*.entity{.ts,.js}'],
+  },
+  [RABBITMQ_CONFIG]: {
+    transport: Transport.RMQ,
+    options: {
+      urls: [
+        `amqp://${process.env.RABBITMQ_DEFAULT_USER}:${process.env.RABBITMQ_DEFAULT_PASS}@rabbitmq:${process.env.RABBITMQ_PORT}`,
+      ],
+      queue: process.env.ANSWER_QUEUE_NAME,
+      // noAck: false,
+      queueOptions: {
+        durable: true,
+      },
+    },
   },
 });

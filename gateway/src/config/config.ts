@@ -1,4 +1,9 @@
-import { AUTH_SERVICE, POLL_SERVICE } from '../app.constants';
+import {
+  ANSWER_SERVICE,
+  AUTH_SERVICE,
+  POLL_SERVICE,
+  RESULT_SERVICE,
+} from '../app.constants';
 import { Transport } from '@nestjs/microservices';
 
 export default () => ({
@@ -22,6 +27,30 @@ export default () => ({
         `amqp://${process.env.RABBITMQ_DEFAULT_USER}:${process.env.RABBITMQ_DEFAULT_PASS}@rabbitmq:${process.env.RABBITMQ_PORT}`,
       ],
       queue: process.env.POLL_QUEUE_NAME,
+      queueOptions: {
+        durable: true,
+      },
+    },
+  },
+  [ANSWER_SERVICE]: {
+    transport: Transport.RMQ,
+    options: {
+      urls: [
+        `amqp://${process.env.RABBITMQ_DEFAULT_USER}:${process.env.RABBITMQ_DEFAULT_PASS}@rabbitmq:${process.env.RABBITMQ_PORT}`,
+      ],
+      queue: process.env.ANSWER_QUEUE_NAME,
+      queueOptions: {
+        durable: true,
+      },
+    },
+  },
+  [RESULT_SERVICE]: {
+    transport: Transport.RMQ,
+    options: {
+      urls: [
+        `amqp://${process.env.RABBITMQ_DEFAULT_USER}:${process.env.RABBITMQ_DEFAULT_PASS}@rabbitmq:${process.env.RABBITMQ_PORT}`,
+      ],
+      queue: process.env.RESULT_QUEUE_NAME,
       queueOptions: {
         durable: true,
       },

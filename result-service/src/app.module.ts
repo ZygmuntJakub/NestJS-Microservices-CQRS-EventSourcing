@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { POSTGRES_CONFIG } from './app.constants';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ResultModule } from './result/result.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { AppService } from './app.service';
       useFactory: (config: ConfigService) => config.get(POSTGRES_CONFIG),
       inject: [ConfigService],
     }),
+    ResultModule,
   ],
   controllers: [AppController],
   providers: [AppService],

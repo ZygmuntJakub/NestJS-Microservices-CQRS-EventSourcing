@@ -4,6 +4,8 @@ import { AuthModule } from './auth/auth.module';
 import { PollModule } from './poll/poll.module';
 import configuration from './config/config';
 import { GlobalModule } from './global.module';
+import { AnswerModule } from './answer/answer.module';
+import { ResultModule } from './result/result.module';
 
 @Module({
   imports: [
@@ -13,6 +15,8 @@ import { GlobalModule } from './global.module';
     ConfigModule.forRoot({
       load: [configuration],
     }),
+    AnswerModule,
+    ResultModule,
   ],
   providers: [],
 })

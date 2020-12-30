@@ -1,17 +1,16 @@
 import { Module } from '@nestjs/common';
-import { PollController } from './poll.controller';
+import { AnswerController } from './answer.controller';
+import { ANSWER_SERVICE } from '../app.constants';
 import { ConfigService } from '@nestjs/config';
-import { POLL_SERVICE } from '../app.constants';
 import { ClientProxyFactory } from '@nestjs/microservices';
 
 @Module({
-  imports: [],
-  controllers: [PollController],
+  controllers: [AnswerController],
   providers: [
     {
-      provide: POLL_SERVICE,
+      provide: ANSWER_SERVICE,
       useFactory: (configService: ConfigService) => {
-        const config = configService.get(POLL_SERVICE);
+        const config = configService.get(ANSWER_SERVICE);
 
         return ClientProxyFactory.create(config);
       },
@@ -19,4 +18,4 @@ import { ClientProxyFactory } from '@nestjs/microservices';
     },
   ],
 })
-export class PollModule {}
+export class AnswerModule {}
