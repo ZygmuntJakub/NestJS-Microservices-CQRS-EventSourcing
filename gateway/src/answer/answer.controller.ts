@@ -1,4 +1,4 @@
-import { Controller, Inject, Post } from '@nestjs/common';
+import { Controller, Inject, Param, Post } from '@nestjs/common';
 import { ANSWER_SERVICE } from '../app.constants';
 import { ClientProxy } from '@nestjs/microservices';
 import { Public } from '../decorators/public.decorators';
@@ -8,9 +8,9 @@ import { SEND_ANSWER_PATTERN } from '../app.patterns';
 export class AnswerController {
   constructor(@Inject(ANSWER_SERVICE) private clientProxy: ClientProxy) {}
 
-  @Post()
+  @Post(':id')
   @Public()
-  sendAnswer() {
-    return this.clientProxy.send(SEND_ANSWER_PATTERN, { msg: 'Hi' });
+  sendAnswer(@Param('id') pollId: string) {
+    return this.clientProxy.send(SEND_ANSWER_PATTERN, { pollId });
   }
 }

@@ -9,7 +9,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const config = configService.get(RABBITMQ_CONFIG);
   await app.connectMicroservice<MicroserviceOptions>(config);
-
+  await app.init();
   app.startAllMicroservices();
 }
 bootstrap();

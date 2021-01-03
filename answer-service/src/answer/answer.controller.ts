@@ -1,5 +1,4 @@
 import { Controller } from '@nestjs/common';
-import { AnswerService } from './answer.service';
 import { SEND_ANSWER_PATTERN } from '../app.patterns';
 import {
   Ctx,
@@ -7,16 +6,19 @@ import {
   Payload,
   RmqContext,
 } from '@nestjs/microservices';
+import { CommandBus } from '@nestjs/cqrs';
+import { AnswerCommand } from './commands';
 
 @Controller()
 export class AnswerController {
-  constructor(private readonly answerService: AnswerService) {}
+  constructor(private commandBus: CommandBus) {}
 
   @MessagePattern(SEND_ANSWER_PATTERN)
-  findAll(@Payload() payload, @Ctx() context: RmqContext) {
+  async answer(@Payload() payload, @Ctx() context: RmqContext) {
     // const channel = context.getChannelRef();
     // const originalMsg = context.getMessage();
     // channel.ack(originalMsg);
-    return { msg: 'Hello from answer microservice' };
+    const { pollId } = payload ?? {};
+    return await this.commandBus.execute(new AnswerCommand(pollId));
   }
 }
