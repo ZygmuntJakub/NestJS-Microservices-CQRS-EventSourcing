@@ -6,15 +6,18 @@ import {
   RmqContext,
 } from '@nestjs/microservices';
 import { PollsService } from './polls.service';
-import { GET_POLLS_PATTERN, CREATE_POLL_PATTERN } from '../app.patterns';
+import {
+  GET_POLLS_PATTERN,
+  CREATE_POLL_PATTERN,
+  VALIDATE_ANSWER_PATTERN,
+} from '../app.patterns';
 
 @Controller()
 export class PollsController {
   constructor(private readonly pollsService: PollsService) {}
 
   @MessagePattern(CREATE_POLL_PATTERN)
-  create(@Payload() payload) {
-    const { createPollDto } = payload;
+  create(@Payload() createPollDto) {
     return this.pollsService.create(createPollDto);
   }
 
@@ -24,6 +27,15 @@ export class PollsController {
     // const originalMsg = context.getMessage();
     // channel.ack(originalMsg);
     return this.pollsService.findAll();
+  }
+
+  @MessagePattern(VALIDATE_ANSWER_PATTERN)
+  validate(@Payload() payload, @Ctx() context: RmqContext) {
+    // const channel = context.getChannelRef();
+    // const originalMsg = context.getMessage();
+    // channel.ack(originalMsg);
+    const { pollId, answers } = payload;
+    return this.pollsService.validate(pollId, answers);
   }
 
   @MessagePattern('findOnePoll')

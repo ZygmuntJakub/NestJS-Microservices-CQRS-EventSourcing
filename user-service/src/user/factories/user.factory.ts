@@ -3,12 +3,12 @@ import { define } from 'typeorm-seeding';
 import { Role, User } from '../entities/user.entity';
 import { Context } from 'vm';
 
-define(User, (faker: typeof Faker) => {
+define(User, (faker: typeof Faker, context: Context) => {
   const username = faker.internet.userName();
   const email = faker.internet.email();
 
   const user = new User();
-  user.username = username;
+  user.username = context?.username ?? username;
   user.email = email;
   user.password = '1234';
   return user;

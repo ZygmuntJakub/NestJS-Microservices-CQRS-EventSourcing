@@ -17,7 +17,7 @@ export class Option extends BaseEntity {
     this.content = content;
   }
 
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   id: string;
 
   @Column({ type: 'varchar' })

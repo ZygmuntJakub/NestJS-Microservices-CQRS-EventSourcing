@@ -1,7 +1,23 @@
-import { POSTGRES_CONFIG, RABBITMQ_CONFIG } from '../app.constants';
+import {
+  POLL_SERVICE,
+  POSTGRES_CONFIG,
+  RABBITMQ_CONFIG,
+} from '../app.constants';
 import { Transport } from '@nestjs/microservices';
 
 export default () => ({
+  [POLL_SERVICE]: {
+    transport: Transport.RMQ,
+    options: {
+      urls: [
+        `amqp://${process.env.RABBITMQ_DEFAULT_USER}:${process.env.RABBITMQ_DEFAULT_PASS}@rabbitmq:${process.env.RABBITMQ_PORT}`,
+      ],
+      queue: process.env.POLL_QUEUE_NAME,
+      queueOptions: {
+        durable: true,
+      },
+    },
+  },
   [POSTGRES_CONFIG]: {
     type: 'postgres',
     host: process.env.POSTGRES_ANSWER_SERVICE_DB_HOSTNAME,

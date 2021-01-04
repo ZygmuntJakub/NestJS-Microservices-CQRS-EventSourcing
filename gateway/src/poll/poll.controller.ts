@@ -25,7 +25,7 @@ export class PollController {
   @Public()
   // @Roles([Role.Admin])
   create(@Body() createPollDto: CreatePollDto) {
-    return this.clientProxy.send(CREATE_POLL_PATTERN, { createPollDto });
+    return this.clientProxy.send(CREATE_POLL_PATTERN, createPollDto);
   }
 
   @Get()

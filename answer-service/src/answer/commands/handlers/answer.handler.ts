@@ -7,9 +7,9 @@ import { AnswerEvent } from '../../events';
 export class AnswerCommandHandler implements ICommandHandler<AnswerCommand> {
   constructor(private readonly publisher: EventBus) {}
   async execute(command: AnswerCommand) {
-    const { pollId } = command;
-    Logger.log(`AnswerCommandHandler => pollId: ${pollId}`);
-    this.publisher.publish(new AnswerEvent(pollId));
+    const { pollId, answers, userId } = command;
+    Logger.log(`AnswerCommandHandler => ${JSON.stringify(command)}`);
+    this.publisher.publish(new AnswerEvent(userId, pollId, answers));
     return 'OK';
   }
 }

@@ -17,7 +17,7 @@ export class Poll extends BaseEntity {
     this.title = title;
   }
 
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   id: string;
 
   @Column({ type: 'varchar', unique: true, nullable: false })

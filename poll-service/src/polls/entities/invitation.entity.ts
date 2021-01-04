@@ -16,7 +16,7 @@ export class Invitation extends BaseEntity {
     this.userId = userId;
   }
 
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   id: string;
 
   @Column({ type: 'uuid' })

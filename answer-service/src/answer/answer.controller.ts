@@ -18,7 +18,9 @@ export class AnswerController {
     // const channel = context.getChannelRef();
     // const originalMsg = context.getMessage();
     // channel.ack(originalMsg);
-    const { pollId } = payload ?? {};
-    return await this.commandBus.execute(new AnswerCommand(pollId));
+    const { userId, pollId, answers } = payload;
+    return await this.commandBus.execute(
+      new AnswerCommand(userId, pollId, answers),
+    );
   }
 }
