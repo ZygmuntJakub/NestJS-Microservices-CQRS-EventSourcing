@@ -2,4 +2,4 @@ FROM node:15.1.0-alpine
 WORKDIR /poll-service
 COPY package.json /poll-service
 RUN npm install
-CMD npm run start:dev
+CMD npm run build && npm run db:setup && npm run start:dev

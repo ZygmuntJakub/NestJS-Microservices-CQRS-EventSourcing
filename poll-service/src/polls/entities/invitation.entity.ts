@@ -19,7 +19,7 @@ export class Invitation extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @Column({ type: 'uuid' })
+  @Column()
   userId: string;
 
   @Column({ type: 'boolean', default: true })

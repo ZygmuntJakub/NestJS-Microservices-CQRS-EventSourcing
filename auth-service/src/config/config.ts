@@ -17,7 +17,7 @@ export default () => ({
   },
   JWT_CONFIG: {
     secret: process.env.JWT_SECRET,
-    signOptions: { expiresIn: '20m' },
+    signOptions: { expiresIn: process.env.JWT_EXPIRES_IN },
   },
   [RABBITMQ_CONFIG]: {
     transport: Transport.RMQ,
