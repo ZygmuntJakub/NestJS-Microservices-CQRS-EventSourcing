@@ -24,7 +24,10 @@ export class Question extends BaseEntity {
   @Column({ type: 'varchar' })
   content: string;
 
-  @OneToMany(() => Option, (option) => option.question, { cascade: true })
+  @OneToMany(() => Option, (option) => option.question, {
+    cascade: true,
+    eager: true,
+  })
   options: Option[];
 
   @ManyToOne(() => Poll, (poll) => poll.questions)

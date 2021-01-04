@@ -23,7 +23,7 @@ export class PollsController {
     // const channel = context.getChannelRef();
     // const originalMsg = context.getMessage();
     // channel.ack(originalMsg);
-    return { msg: 'Hello from there' };
+    return this.pollsService.findAll();
   }
 
   @MessagePattern('findOnePoll')

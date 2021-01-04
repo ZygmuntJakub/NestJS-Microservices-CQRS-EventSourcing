@@ -31,7 +31,7 @@ export class PollController {
   @Get()
   @Roles([Role.Admin])
   findAll() {
-    return this.clientProxy.send(GET_POLLS_PATTERN, { msg: 'Hi' });
+    return this.clientProxy.send(GET_POLLS_PATTERN, {});
   }
 
   @Get(':id')

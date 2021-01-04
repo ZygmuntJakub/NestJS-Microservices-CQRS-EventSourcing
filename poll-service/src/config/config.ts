@@ -11,6 +11,7 @@ export default () => ({
     password: process.env.POSTGRES_POLL_SERVICE_PASSWORD,
     database: process.env.POSTGRES_POLL_SERVICE_DB,
     synchronize: true,
+    dropSchema: true,
     logging: true,
     entities: ['dist/**/*.entity{.ts,.js}'],
   },

@@ -27,7 +27,7 @@ export class PollsService {
   }
 
   findAll() {
-    return `This action returns all polls`;
+    return Poll.find();
   }
 
   findOne(id: number) {

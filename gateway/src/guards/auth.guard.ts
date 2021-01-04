@@ -36,8 +36,11 @@ export class AuthGuard implements CanActivate {
         })
         .pipe(timeout(5000))
         .toPromise<boolean>();
-
-      return res;
+      if (res) {
+        this.saveCurrentUser(context, res);
+        return true;
+      }
+      return false;
     } catch (err) {
       Logger.error(err);
       return false;
@@ -56,5 +59,10 @@ export class AuthGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
+  }
+
+  saveCurrentUser(context: ExecutionContext, user) {
+    const request = context.switchToHttp().getRequest();
+    request.currentUser = user;
   }
 }

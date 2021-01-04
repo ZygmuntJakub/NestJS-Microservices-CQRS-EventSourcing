@@ -20,17 +20,21 @@ export class Poll extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', unique: true })
+  @Column({ type: 'varchar', unique: true, nullable: false })
   title: string;
 
   @Column({ type: 'boolean', default: false })
   published: boolean;
 
-  @OneToMany(() => Question, (question) => question.poll, { cascade: true })
+  @OneToMany(() => Question, (question) => question.poll, {
+    cascade: true,
+    eager: true,
+  })
   questions: Question[];
 
   @OneToMany(() => Invitation, (invitation) => invitation.poll, {
     cascade: true,
+    eager: true,
   })
   invitations: Invitation[];
 

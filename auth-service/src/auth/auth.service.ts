@@ -57,7 +57,7 @@ export class AuthService {
       const user = await this.getUser(username);
       if (user.roles) {
         const userRoles = user.roles.map(({ name }) => name);
-        return userRoles.some((role) => roles.includes(role));
+        return userRoles.some((role) => roles.includes(role)) ? user : false;
       }
       return false;
     } catch (e) {
