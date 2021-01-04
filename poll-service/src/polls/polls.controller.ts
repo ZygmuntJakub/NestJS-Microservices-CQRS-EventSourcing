@@ -6,16 +6,15 @@ import {
   RmqContext,
 } from '@nestjs/microservices';
 import { PollsService } from './polls.service';
-import { CreatePollDto } from './dto/create-poll.dto';
-import { UpdatePollDto } from './dto/update-poll.dto';
-import { GET_POLLS_PATTERN } from '../app.patterns';
+import { GET_POLLS_PATTERN, CREATE_POLL_PATTERN } from '../app.patterns';
 
 @Controller()
 export class PollsController {
   constructor(private readonly pollsService: PollsService) {}
 
-  @MessagePattern('createPoll')
-  create(@Payload() createPollDto: CreatePollDto) {
+  @MessagePattern(CREATE_POLL_PATTERN)
+  create(@Payload() payload) {
+    const { createPollDto } = payload;
     return this.pollsService.create(createPollDto);
   }
 
@@ -33,7 +32,7 @@ export class PollsController {
   }
 
   @MessagePattern('updatePoll')
-  update(@Payload() updatePollDto: UpdatePollDto) {
+  update(@Payload() updatePollDto) {
     return this.pollsService.update(updatePollDto.id, updatePollDto);
   }
 

@@ -1,1 +1,3 @@
-export class UpdatePollDto {}
+export class UpdatePollDto {
+  id: number;
+}
