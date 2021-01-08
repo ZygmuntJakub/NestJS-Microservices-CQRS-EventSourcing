@@ -20,7 +20,6 @@ import configuration from '../config/config';
   providers: [
     ...CommandHandlers,
     ...EventHandlers,
-    ...Sagas,
     {
       provide: POLL_SERVICE,
       useFactory: (configService: ConfigService) => {

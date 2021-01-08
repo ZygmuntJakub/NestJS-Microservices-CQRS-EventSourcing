@@ -1,7 +1,7 @@
-import { AnswerEvent } from './impl/answer.event';
+import { ValidateAnswerEvent } from './impl/validate-answer.event';
 import { SaveAnswerEvent } from './impl/save-answer.event';
 import { SaveAnswerHandler } from './handlers/save-answer.handler';
-import { AnswerEventHandler } from './handlers/answer.handler';
+import { ValidateAnswerEventHandler } from './handlers/validate-answer.handler';
 
-export const EventHandlers = [AnswerEventHandler, SaveAnswerHandler];
-export { AnswerEvent, SaveAnswerEvent };
+export const EventHandlers = [ValidateAnswerEventHandler, SaveAnswerHandler];
+export { ValidateAnswerEvent, SaveAnswerEvent };
