@@ -2,34 +2,37 @@ import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { Inject, Logger } from '@nestjs/common';
 import { SaveAnswerEvent, ValidateAnswerEvent } from '../index';
 import { ClientProxy } from '@nestjs/microservices';
-import { POLL_SERVICE } from '../../../app.constants';
-import { VALIDATE_ANSWER_PATTERN } from '../../../app.patterns';
+import { POLL_SERVICE, RESULT_SERVICE } from '../../../app.constants';
+import {
+  SEND_RESULT_PATTERN,
+  VALIDATE_ANSWER_PATTERN,
+} from '../../../app.patterns';
 import { timeout } from 'rxjs/operators';
+import { SaveAnswerSuccessEvent } from '../impl/save-answer-success.event';
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-@EventsHandler(ValidateAnswerEvent)
-export class ValidateAnswerEventHandler
+@EventsHandler(SaveAnswerSuccessEvent)
+export class SaveAnswerSuccessEventHandler
   implements IEventHandler<ValidateAnswerEvent> {
   constructor(
-    @Inject(POLL_SERVICE) private clientProxy: ClientProxy,
+    @Inject(RESULT_SERVICE) private clientProxy: ClientProxy,
     private readonly publisher: EventBus,
   ) {}
-  async handle(event: ValidateAnswerEvent) {
-    const { userId, pollId, answers } = event;
+  async handle(event: SaveAnswerSuccessEvent) {
+    const { pollId, answers } = event;
     try {
-      Logger.log(`AnswerEvent => Start validate vote`);
+      Logger.log(`SaveAnswerSuccessEvent => Start send result`);
       const response = await this.clientProxy
-        .send(VALIDATE_ANSWER_PATTERN, { pollId, answers })
+        .send(SEND_RESULT_PATTERN, { pollId, answers })
         .pipe(timeout(2000))
         .toPromise();
-      Logger.log(`AnswerEvent => End with success validate vote`);
-      this.publisher.publish(new SaveAnswerEvent(userId, pollId, answers));
+      Logger.log(`SaveAnswerSuccessEvent => End with success send result`);
     } catch (err) {
       Logger.log(err);
-      Logger.log(`AnswerEvent => End with error validate vote`);
+      Logger.log(`AnswerEvent => End with error send result`);
     }
   }
 }
