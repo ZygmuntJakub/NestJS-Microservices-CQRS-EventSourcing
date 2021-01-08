@@ -12,21 +12,15 @@ import { GET_RESULTS_PATTERN, SEND_RESULT_PATTERN } from '../app.patterns';
 export class ResultController {
   constructor(private readonly resultService: ResultService) {}
 
-  @MessagePattern(GET_RESULTS_PATTERN)
-  findAll(@Payload() payload, @Ctx() context: RmqContext) {
-    // const channel = context.getChannelRef();
-    // const originalMsg = context.getMessage();
-    // channel.ack(originalMsg);
-    return {
-      msg: `Hello from result microservice. Poll id: ${payload.pollId}`,
-    };
-  }
   @MessagePattern(SEND_RESULT_PATTERN)
-  receiveAnswer(@Payload() payload, @Ctx() context: RmqContext) {
-    // const channel = context.getChannelRef();
-    // const originalMsg = context.getMessage();
-    // channel.ack(originalMsg);
+  async receiveAnswer(@Payload() payload, @Ctx() context: RmqContext) {
     const { pollId, answers } = payload;
-    this.resultService.receiveAnswer(pollId, answers);
+    await this.resultService.receiveAnswer(pollId, answers);
+  }
+
+  @MessagePattern(GET_RESULTS_PATTERN)
+  async getResult(@Payload() payload, @Ctx() context: RmqContext) {
+    const { pollId } = payload;
+    return await this.resultService.getResult(pollId);
   }
 }
