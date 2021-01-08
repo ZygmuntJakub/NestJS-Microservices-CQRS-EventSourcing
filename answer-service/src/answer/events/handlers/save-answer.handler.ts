@@ -3,6 +3,7 @@ import { Logger } from '@nestjs/common';
 import { SaveAnswerEvent } from '../impl/save-answer.event';
 import { SaveAnswerEventError } from '../impl/save-answer.event-error';
 import { Answer } from '../../entities/answer.entity';
+import { SaveAnswerSuccessEvent } from '../impl/save-answer-success.event';
 
 @EventsHandler(SaveAnswerEvent)
 export class SaveAnswerHandler implements IEventHandler<SaveAnswerEvent> {
@@ -21,6 +22,7 @@ export class SaveAnswerHandler implements IEventHandler<SaveAnswerEvent> {
           event,
         )}`,
       );
+      this.publisher.publish(new SaveAnswerSuccessEvent(pollId, answers));
     } catch (err) {
       Logger.log(
         `SaveAnswerEvent => End with error save vote ${JSON.stringify(event)}`,

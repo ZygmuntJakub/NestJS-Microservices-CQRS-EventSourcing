@@ -24,15 +24,23 @@ export class SaveAnswerSuccessEventHandler
   async handle(event: SaveAnswerSuccessEvent) {
     const { pollId, answers } = event;
     try {
-      Logger.log(`SaveAnswerSuccessEvent => Start send result`);
-      const response = await this.clientProxy
+      Logger.log(
+        `SaveAnswerSuccessEvent => Start send result ${JSON.stringify(event)}`,
+      );
+      await this.clientProxy
         .send(SEND_RESULT_PATTERN, { pollId, answers })
         .pipe(timeout(2000))
         .toPromise();
-      Logger.log(`SaveAnswerSuccessEvent => End with success send result`);
+      Logger.log(
+        `SaveAnswerSuccessEvent => End with success send result ${JSON.stringify(
+          event,
+        )}`,
+      );
     } catch (err) {
       Logger.log(err);
-      Logger.log(`AnswerEvent => End with error send result`);
+      Logger.log(
+        `AnswerEvent => End with error send result ${JSON.stringify(event)}`,
+      );
     }
   }
 }
