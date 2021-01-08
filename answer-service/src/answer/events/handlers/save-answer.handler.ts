@@ -1,17 +1,21 @@
 import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { Logger } from '@nestjs/common';
 import { SaveAnswerEvent } from '../impl/save-answer.event';
-import { RpcException } from '@nestjs/microservices';
 import { SaveAnswerEventError } from '../impl/save-answer.event-error';
+import { Answer } from '../../entities/answer.entity';
 
 @EventsHandler(SaveAnswerEvent)
 export class SaveAnswerHandler implements IEventHandler<SaveAnswerEvent> {
   constructor(private readonly publisher: EventBus) {}
-  handle(event: SaveAnswerEvent): any {
+  async handle(event: SaveAnswerEvent) {
     const { userId, pollId, answers, retryCounter } = event;
     try {
       Logger.log(`SaveAnswerEvent => Start save vote ${JSON.stringify(event)}`);
-      throw 'error';
+      const answer = new Answer();
+      answer.pollId = pollId;
+      answer.userId = userId;
+      answer.answers = answers;
+      await Answer.save(answer);
       Logger.log(
         `SaveAnswerEvent => End with success save vote ${JSON.stringify(
           event,
