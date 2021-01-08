@@ -2,6 +2,7 @@ import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { Logger } from '@nestjs/common';
 import { SaveAnswerEvent } from '../impl/save-answer.event';
 import { RpcException } from '@nestjs/microservices';
+import { SaveAnswerEventError } from '../impl/save-answer.event-error';
 
 @EventsHandler(SaveAnswerEvent)
 export class SaveAnswerHandler implements IEventHandler<SaveAnswerEvent> {
@@ -20,14 +21,9 @@ export class SaveAnswerHandler implements IEventHandler<SaveAnswerEvent> {
       Logger.log(
         `SaveAnswerEvent => End with error save vote ${JSON.stringify(event)}`,
       );
-      if (retryCounter >= 2)
-        Logger.log(`SaveAnswerEvent => Dropping vote ${JSON.stringify(event)}`);
-      else {
-        Logger.log(`SaveAnswerEvent => Retry vote ${JSON.stringify(event)}`);
-        this.publisher.publish(
-          new SaveAnswerEvent(userId, pollId, answers, retryCounter + 1),
-        );
-      }
+      this.publisher.publish(
+        new SaveAnswerEventError(userId, pollId, answers, retryCounter),
+      );
     }
   }
 }
