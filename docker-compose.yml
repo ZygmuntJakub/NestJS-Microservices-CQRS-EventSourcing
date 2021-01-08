@@ -1,5 +1,13 @@
 version: '3'
 services:
+  redis:
+    image: 'bitnami/redis:latest'
+    hostname: ${REDIS_HOSTNAME}
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_MASTER_PORT_NUMBER = ${REDIS_PORT}
+    networks:
+      - services-network
   rabbitmq:
     image: rabbitmq:management-alpine
     container_name: rabbitmq
