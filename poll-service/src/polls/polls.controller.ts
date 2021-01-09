@@ -10,6 +10,7 @@ import {
   GET_POLLS_PATTERN,
   CREATE_POLL_PATTERN,
   VALIDATE_ANSWER_PATTERN,
+  GET_POLL_PATTERN,
 } from '../app.patterns';
 
 @Controller()
@@ -23,23 +24,18 @@ export class PollsController {
 
   @MessagePattern(GET_POLLS_PATTERN)
   findAll(@Payload() payload, @Ctx() context: RmqContext) {
-    // const channel = context.getChannelRef();
-    // const originalMsg = context.getMessage();
-    // channel.ack(originalMsg);
     return this.pollsService.findAll();
   }
 
   @MessagePattern(VALIDATE_ANSWER_PATTERN)
   validate(@Payload() payload, @Ctx() context: RmqContext) {
-    // const channel = context.getChannelRef();
-    // const originalMsg = context.getMessage();
-    // channel.ack(originalMsg);
     const { userId, pollId, answers } = payload;
     return this.pollsService.validate(userId, pollId, answers);
   }
 
-  @MessagePattern('findOnePoll')
-  findOne(@Payload() id: number) {
+  @MessagePattern(GET_POLL_PATTERN)
+  findOne(@Payload() payload) {
+    const { id } = payload;
     return this.pollsService.findOne(id);
   }
 

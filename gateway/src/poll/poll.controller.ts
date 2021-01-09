@@ -12,7 +12,11 @@ import { CreatePollDto } from './dto/create-poll.dto';
 import { UpdatePollDto } from './dto/update-poll.dto';
 import { ClientProxy } from '@nestjs/microservices';
 import { POLL_SERVICE } from '../app.constants';
-import { CREATE_POLL_PATTERN, GET_POLLS_PATTERN } from '../app.patterns';
+import {
+  CREATE_POLL_PATTERN,
+  GET_POLL_PATTERN,
+  GET_POLLS_PATTERN,
+} from '../app.patterns';
 import { Roles } from '../decorators/roles.decorators';
 import { Role } from '../enums/role.enum';
 import { Public } from '../decorators/public.decorators';
@@ -35,11 +39,13 @@ export class PollController {
   }
 
   @Get(':id')
+  @Roles([Role.Admin])
   findOne(@Param('id') id: string) {
-    return null;
+    return this.clientProxy.send(GET_POLL_PATTERN, { id });
   }
 
   @Put(':id')
+  @Roles([Role.Admin])
   update(@Param('id') id: string, @Body() updatePollDto: UpdatePollDto) {
     return null;
   }

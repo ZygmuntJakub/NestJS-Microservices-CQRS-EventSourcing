@@ -62,8 +62,15 @@ export class PollsService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} poll`;
+  async findOne(id: string) {
+    try {
+      return await Poll.findOneOrFail({
+        id,
+      });
+    } catch (err) {
+      Logger.log(err);
+      throw new RpcException(err);
+    }
   }
 
   update(id: number, updatePollDto) {
