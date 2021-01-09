@@ -6,7 +6,6 @@ import { AnswerDto } from './dto/answer.dto';
 import { Roles } from '../decorators/roles.decorators';
 import { Role } from '../enums/role.enum';
 import { CurrentUser } from '../decorators/current-user.decorators';
-import { timeout } from 'rxjs/operators';
 
 @Controller('answer')
 export class AnswerController {

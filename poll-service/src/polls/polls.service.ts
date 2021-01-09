@@ -5,8 +5,21 @@ import { Question } from './entities/question.entity';
 import { Poll } from './entities/poll.entity';
 import { RpcException } from '@nestjs/microservices';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+
+function mapAsync<T1, T2>(
+  array: T1[],
+  callback: (value: T1, index: number, array: T1[]) => Promise<T2>,
+): Promise<T2[]> {
+  return Promise.all(array.map(callback));
+}
+
+async function filterAsync<T>(
+  array: T[],
+  callback: (value: T, index: number, array: T[]) => Promise<boolean>,
+): Promise<T[]> {
+  const filterMap = await mapAsync(array, callback);
+  return array.filter((_, index) => filterMap[index]);
+}
 
 @Injectable()
 export class PollsService {
@@ -99,6 +112,33 @@ export class PollsService {
       if (poll?.published)
         throw new ForbiddenException({ message: 'POLL_PUBLISHED' });
       return Poll.delete({ id });
+    } catch (err) {
+      Logger.log(err);
+      throw new RpcException(err);
+    }
+  }
+
+  async checkInvitations(userId: string) {
+    try {
+      const invitations = await Invitation.find({ userId });
+      return await filterAsync(invitations, async ({ pollId }) => {
+        const poll = await Poll.findOneOrFail({ id: pollId });
+        return poll.published;
+      });
+    } catch (err) {
+      Logger.log(err);
+      throw new RpcException(err);
+    }
+  }
+
+  async getInvitationPoll(userId: string, pollId) {
+    try {
+      await Invitation.findOneOrFail({ userId, pollId });
+      const poll = await Poll.findOneOrFail({ id: pollId });
+      if (!poll?.published)
+        throw new ForbiddenException({ message: 'POLL_NOT_PUBLISHED' });
+      delete poll.invitations;
+      return poll;
     } catch (err) {
       Logger.log(err);
       throw new RpcException(err);

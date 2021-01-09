@@ -13,6 +13,8 @@ import {
   GET_POLL_PATTERN,
   UPDATE_POLL_PATTERN,
   DELETE_POLL_PATTERN,
+  CHECK_INVITATIONS_PATTERN,
+  GET_INVITATION_POLL_PATTERN,
 } from '../app.patterns';
 
 @Controller()
@@ -51,5 +53,17 @@ export class PollsController {
   remove(@Payload() payload) {
     const { id } = payload;
     return this.pollsService.remove(id);
+  }
+
+  @MessagePattern(CHECK_INVITATIONS_PATTERN)
+  checkInvitations(@Payload() payload) {
+    const { userId } = payload;
+    return this.pollsService.checkInvitations(userId);
+  }
+
+  @MessagePattern(GET_INVITATION_POLL_PATTERN)
+  getInvitationPoll(@Payload() payload) {
+    const { userId, pollId } = payload;
+    return this.pollsService.getInvitationPoll(userId, pollId);
   }
 }

@@ -13,14 +13,17 @@ import { UpdatePollDto } from './dto/update-poll.dto';
 import { ClientProxy } from '@nestjs/microservices';
 import { POLL_SERVICE } from '../app.constants';
 import {
+  CHECK_INVITATIONS_PATTERN,
   CREATE_POLL_PATTERN,
+  DELETE_POLL_PATTERN,
+  GET_INVITATION_POLL_PATTERN,
   GET_POLL_PATTERN,
   GET_POLLS_PATTERN,
   UPDATE_POLL_PATTERN,
-  DELETE_POLL_PATTERN,
 } from '../app.patterns';
 import { Roles } from '../decorators/roles.decorators';
 import { Role } from '../enums/role.enum';
+import { CurrentUser } from '../decorators/current-user.decorators';
 
 @Controller('poll')
 export class PollController {
@@ -36,6 +39,23 @@ export class PollController {
   @Roles([Role.Admin])
   findAll() {
     return this.clientProxy.send(GET_POLLS_PATTERN, {});
+  }
+
+  @Get('/invitation')
+  @Roles([Role.Admin, Role.Participant])
+  checkInvitations(@CurrentUser() user) {
+    return this.clientProxy.send(CHECK_INVITATIONS_PATTERN, {
+      userId: user.id,
+    });
+  }
+
+  @Get('/invitation/:id')
+  @Roles([Role.Admin, Role.Participant])
+  getInvitationPoll(@Param('id') id: string, @CurrentUser() user) {
+    return this.clientProxy.send(GET_INVITATION_POLL_PATTERN, {
+      userId: user.id,
+      pollId: id,
+    });
   }
 
   @Get(':id')
