@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { Invitation } from './entities/invitation.entity';
 import { Option } from './entities/option.entity';
 import { Question } from './entities/question.entity';
 import { Poll } from './entities/poll.entity';
 import { RpcException } from '@nestjs/microservices';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
+import { EntityMetadataNotFoundError } from 'typeorm/error/EntityMetadataNotFoundError';
 
 @Injectable()
 export class PollsService {
@@ -36,9 +37,13 @@ export class PollsService {
     return Poll.find();
   }
 
-  async validate(pollId, answers) {
+  async validate(userId, pollId, answers) {
     try {
-      const { questions } = await Poll.findOneOrFail({ id: pollId });
+      const { questions, invitations, published } = await Poll.findOneOrFail({
+        id: pollId,
+      });
+      if (!published)
+        throw new ForbiddenException({ message: 'POLL_NOT_PUBLISHED' });
       answers.forEach(({ questionId, answerId }) => {
         const question = questions.find(({ id }) => id == questionId);
         if (!question)
@@ -46,8 +51,13 @@ export class PollsService {
         const option = question.options.find(({ id }) => id == answerId);
         if (!option) throw new EntityNotFoundError(Option, { id: answerId });
       });
+      const invitationExists = invitations.some(
+        ({ userId: invitationUserId }) => `${userId}` === invitationUserId,
+      );
+      if (!invitationExists)
+        throw new EntityNotFoundError(Invitation, { userId });
     } catch (err) {
-      console.log(err);
+      Logger.log(err);
       throw new RpcException(err);
     }
   }

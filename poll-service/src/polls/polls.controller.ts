@@ -34,8 +34,8 @@ export class PollsController {
     // const channel = context.getChannelRef();
     // const originalMsg = context.getMessage();
     // channel.ack(originalMsg);
-    const { pollId, answers } = payload;
-    return this.pollsService.validate(pollId, answers);
+    const { userId, pollId, answers } = payload;
+    return this.pollsService.validate(userId, pollId, answers);
   }
 
   @MessagePattern('findOnePoll')

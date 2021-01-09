@@ -10,6 +10,6 @@ export class AnswerCommandHandler implements ICommandHandler<AnswerCommand> {
     const { pollId, answers, userId } = command;
     Logger.log(`AnswerCommandHandler => ${JSON.stringify(command)}`);
     this.publisher.publish(new ValidateAnswerEvent(userId, pollId, answers));
-    return 'OK';
+    return 'CHECK_YOUR_VOTE';
   }
 }

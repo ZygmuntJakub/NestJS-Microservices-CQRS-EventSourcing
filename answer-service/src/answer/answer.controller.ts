@@ -15,9 +15,6 @@ export class AnswerController {
 
   @MessagePattern(SEND_ANSWER_PATTERN)
   async answer(@Payload() payload, @Ctx() context: RmqContext) {
-    // const channel = context.getChannelRef();
-    // const originalMsg = context.getMessage();
-    // channel.ack(originalMsg);
     const { userId, pollId, answers } = payload;
     return await this.commandBus.execute(
       new AnswerCommand(userId, pollId, answers),

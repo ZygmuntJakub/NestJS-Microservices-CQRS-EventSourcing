@@ -21,8 +21,8 @@ export class ValidateAnswerEventHandler
     const { userId, pollId, answers } = event;
     try {
       Logger.log(`AnswerEvent => Start validate vote`);
-      const response = await this.clientProxy
-        .send(VALIDATE_ANSWER_PATTERN, { pollId, answers })
+      await this.clientProxy
+        .send(VALIDATE_ANSWER_PATTERN, { userId, pollId, answers })
         .pipe(timeout(2000))
         .toPromise();
       Logger.log(`AnswerEvent => End with success validate vote`);
