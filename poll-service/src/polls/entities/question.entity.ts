@@ -25,12 +25,13 @@ export class Question extends BaseEntity {
   content: string;
 
   @OneToMany(() => Option, (option) => option.question, {
-    cascade: true,
+    cascade: ['update', 'remove', 'insert'],
+    onDelete: 'CASCADE',
     eager: true,
   })
   options: Option[];
 
-  @ManyToOne(() => Poll, (poll) => poll.questions)
+  @ManyToOne(() => Poll, (poll) => poll.questions, { onDelete: 'CASCADE' })
   poll: Poll;
 
   @CreateDateColumn()

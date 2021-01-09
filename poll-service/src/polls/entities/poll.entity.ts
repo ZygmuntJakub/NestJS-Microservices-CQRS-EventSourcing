@@ -27,13 +27,13 @@ export class Poll extends BaseEntity {
   published: boolean;
 
   @OneToMany(() => Question, (question) => question.poll, {
-    cascade: true,
+    cascade: ['update', 'remove', 'insert'],
     eager: true,
   })
   questions: Question[];
 
   @OneToMany(() => Invitation, (invitation) => invitation.poll, {
-    cascade: true,
+    cascade: ['update', 'remove', 'insert'],
     eager: true,
   })
   invitations: Invitation[];

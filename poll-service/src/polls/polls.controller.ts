@@ -11,6 +11,8 @@ import {
   CREATE_POLL_PATTERN,
   VALIDATE_ANSWER_PATTERN,
   GET_POLL_PATTERN,
+  UPDATE_POLL_PATTERN,
+  DELETE_POLL_PATTERN,
 } from '../app.patterns';
 
 @Controller()
@@ -39,13 +41,15 @@ export class PollsController {
     return this.pollsService.findOne(id);
   }
 
-  @MessagePattern('updatePoll')
-  update(@Payload() updatePollDto) {
-    return this.pollsService.update(updatePollDto.id, updatePollDto);
+  @MessagePattern(UPDATE_POLL_PATTERN)
+  update(@Payload() payload) {
+    const { updatePollDto, id } = payload;
+    return this.pollsService.update(id, updatePollDto);
   }
 
-  @MessagePattern('removePoll')
-  remove(@Payload() id: number) {
+  @MessagePattern(DELETE_POLL_PATTERN)
+  remove(@Payload() payload) {
+    const { id } = payload;
     return this.pollsService.remove(id);
   }
 }

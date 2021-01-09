@@ -23,7 +23,9 @@ export class Option extends BaseEntity {
   @Column({ type: 'varchar' })
   content: string;
 
-  @ManyToOne(() => Question, (question) => question.options)
+  @ManyToOne(() => Question, (question) => question.options, {
+    onDelete: 'CASCADE',
+  })
   question: Question;
 
   @CreateDateColumn()

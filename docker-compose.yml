@@ -5,7 +5,7 @@ services:
     hostname: ${REDIS_HOSTNAME}
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
-      - REDIS_MASTER_PORT_NUMBER = ${REDIS_PORT}
+      - REDIS_MASTER_PORT_NUMBER=${REDIS_PORT}
     networks:
       - services-network
   rabbitmq:

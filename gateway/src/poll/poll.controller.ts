@@ -16,18 +16,18 @@ import {
   CREATE_POLL_PATTERN,
   GET_POLL_PATTERN,
   GET_POLLS_PATTERN,
+  UPDATE_POLL_PATTERN,
+  DELETE_POLL_PATTERN,
 } from '../app.patterns';
 import { Roles } from '../decorators/roles.decorators';
 import { Role } from '../enums/role.enum';
-import { Public } from '../decorators/public.decorators';
 
 @Controller('poll')
 export class PollController {
   constructor(@Inject(POLL_SERVICE) private clientProxy: ClientProxy) {}
 
   @Post()
-  @Public()
-  // @Roles([Role.Admin])
+  @Roles([Role.Admin])
   create(@Body() createPollDto: CreatePollDto) {
     return this.clientProxy.send(CREATE_POLL_PATTERN, createPollDto);
   }
@@ -47,11 +47,12 @@ export class PollController {
   @Put(':id')
   @Roles([Role.Admin])
   update(@Param('id') id: string, @Body() updatePollDto: UpdatePollDto) {
-    return null;
+    return this.clientProxy.send(UPDATE_POLL_PATTERN, { id, updatePollDto });
   }
 
   @Delete(':id')
+  @Roles([Role.Admin])
   remove(@Param('id') id: string) {
-    return null;
+    return this.clientProxy.send(DELETE_POLL_PATTERN, { id });
   }
 }

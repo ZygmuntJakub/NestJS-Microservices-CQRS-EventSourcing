@@ -5,10 +5,16 @@ import { Question } from './entities/question.entity';
 import { Poll } from './entities/poll.entity';
 import { RpcException } from '@nestjs/microservices';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
-import { EntityMetadataNotFoundError } from 'typeorm/error/EntityMetadataNotFoundError';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class PollsService {
+  constructor(
+    @InjectRepository(Poll)
+    private pollRepository: Repository<Poll>,
+  ) {}
+
   async create(createPollDto) {
     try {
       const { title, invitations, questions } = createPollDto;
@@ -73,11 +79,34 @@ export class PollsService {
     }
   }
 
-  update(id: number, updatePollDto) {
-    return `This action updates a #${id} poll`;
+  async update(id: string, updatePollDto) {
+    const poll = await Poll.findOneOrFail({
+      id,
+    });
+    const target = {
+      ...poll,
+      ...updatePollDto,
+      invitations: [...poll.invitations, ...(updatePollDto?.invitations ?? [])],
+    };
+    try {
+      return Poll.save(target);
+    } catch (err) {
+      Logger.log(err);
+      throw new RpcException(err);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} poll`;
+  async remove(id: string) {
+    try {
+      const poll = await Poll.findOneOrFail({
+        id,
+      });
+      if (poll?.published)
+        throw new ForbiddenException({ message: 'POLL_PUBLISHED' });
+      return this.pollRepository.delete({ id });
+    } catch (err) {
+      Logger.log(err);
+      throw new RpcException(err);
+    }
   }
 }
