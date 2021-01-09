@@ -10,11 +10,6 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class PollsService {
-  constructor(
-    @InjectRepository(Poll)
-    private pollRepository: Repository<Poll>,
-  ) {}
-
   async create(createPollDto) {
     try {
       const { title, invitations, questions } = createPollDto;
@@ -103,7 +98,7 @@ export class PollsService {
       });
       if (poll?.published)
         throw new ForbiddenException({ message: 'POLL_PUBLISHED' });
-      return this.pollRepository.delete({ id });
+      return Poll.delete({ id });
     } catch (err) {
       Logger.log(err);
       throw new RpcException(err);

@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Poll } from './entities/poll.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Poll])],
   controllers: [PollsController],
   providers: [PollsService],
 })
