@@ -1,12 +1,15 @@
 import { Factory, Seeder } from 'typeorm-seeding';
 import { Connection } from 'typeorm';
 import { Role, User } from '../entities/user.entity';
+import { ADMIN_ROLE, PARTICIPANT_ROLE } from '../../app.constants';
 
 export default class UserSeed implements Seeder {
   public async run(factory: Factory, connection: Connection) {
-    const participant = await factory(Role)({ name: 'participant' }).create();
-    const admin = await factory(Role)({ name: 'admin' }).create();
-    await factory(User)({ username: 'participant' })
+    const participant = await factory(Role)({
+      name: PARTICIPANT_ROLE,
+    }).create();
+    const admin = await factory(Role)({ name: ADMIN_ROLE }).create();
+    await factory(User)({ username: PARTICIPANT_ROLE })
       .map(async (user: User) => {
         user.roles = [participant];
         return user;

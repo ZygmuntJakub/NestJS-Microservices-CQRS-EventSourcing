@@ -1,6 +1,8 @@
 export const AUTH_USER_PATTERN = { role: 'user', cmd: 'auth' };
 export const AUTH_CHECK_USER_PATTERN = { role: 'user', cmd: 'check' };
 
+export const USER_ADD_PATTERN = { role: 'user', cmd: 'add' };
+
 export const GET_POLLS_PATTERN = { role: 'poll', cmd: 'get-polls' };
 export const GET_POLL_PATTERN = { role: 'poll', cmd: 'get-poll' };
 export const UPDATE_POLL_PATTERN = { role: 'poll', cmd: 'update-poll' };

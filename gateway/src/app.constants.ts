@@ -2,3 +2,4 @@ export const AUTH_SERVICE = 'AUTH_SERVICE';
 export const POLL_SERVICE = 'POLL_SERVICE';
 export const ANSWER_SERVICE = 'ANSWER_SERVICE';
 export const RESULT_SERVICE = 'RESULT_SERVICE';
+export const USER_SERVICE = 'USER_SERVICE';

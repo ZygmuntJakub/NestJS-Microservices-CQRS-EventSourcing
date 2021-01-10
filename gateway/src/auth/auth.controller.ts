@@ -4,6 +4,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { AUTH_USER_PATTERN } from '../app.patterns';
 import { Public } from '../decorators/public.decorators';
+import { CredentialsDto } from './dto/credentials.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -11,7 +12,7 @@ export class AuthController {
 
   @Post()
   @Public()
-  login(@Body() data: any): Observable<string> {
+  login(@Body() data: CredentialsDto): Observable<string> {
     return this.client.send<string>(AUTH_USER_PATTERN, { body: { ...data } });
   }
 }
