@@ -9,12 +9,14 @@ export default class UserSeed implements Seeder {
       name: PARTICIPANT_ROLE,
     }).create();
     const admin = await factory(Role)({ name: ADMIN_ROLE }).create();
-    await factory(User)({ username: PARTICIPANT_ROLE })
-      .map(async (user: User) => {
-        user.roles = [participant];
-        return user;
-      })
-      .create();
+    for (let i = 0; i < 10_000; i++) {
+      await factory(User)({ username: `${PARTICIPANT_ROLE}-${i}` })
+        .map(async (user: User) => {
+          user.roles = [participant];
+          return user;
+        })
+        .create();
+    }
     await factory(User)()
       .map(async (user: User) => {
         user.roles = [admin];
