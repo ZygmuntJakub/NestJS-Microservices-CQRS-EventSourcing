@@ -20,21 +20,7 @@ export class UserService {
     }
   }
 
-  findAll() {
-    return `This action returns all user`;
-  }
-
   findOne(query: FindConditions<User>): Promise<User> {
     return User.findOne(query);
   }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
-  }
-
-  addUser(username, password, email) {}
 }
