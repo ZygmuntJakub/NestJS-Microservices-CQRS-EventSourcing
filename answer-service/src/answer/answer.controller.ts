@@ -1,5 +1,8 @@
 import { Controller } from '@nestjs/common';
-import { SEND_ANSWER_PATTERN } from '../app.patterns';
+import {
+  ANSWER_POLL_PROJECTION_PATTERN,
+  SEND_ANSWER_PATTERN,
+} from '../app.patterns';
 import {
   Ctx,
   MessagePattern,
@@ -8,6 +11,7 @@ import {
 } from '@nestjs/microservices';
 import { CommandBus } from '@nestjs/cqrs';
 import { AnswerCommand } from './commands';
+import { ProjectionCommand } from './commands/impl/projection.command';
 
 @Controller()
 export class AnswerController {
@@ -19,5 +23,12 @@ export class AnswerController {
     return await this.commandBus.execute(
       new AnswerCommand(userId, pollId, answers),
     );
+  }
+
+  @MessagePattern(ANSWER_POLL_PROJECTION_PATTERN)
+  async projection(@Payload() payload, @Ctx() context: RmqContext) {
+    const { pollId } = payload;
+    console.log(pollId);
+    return await this.commandBus.execute(new ProjectionCommand(pollId));
   }
 }

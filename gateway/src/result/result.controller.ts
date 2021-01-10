@@ -2,7 +2,7 @@ import { Controller, Get, Inject, Param } from '@nestjs/common';
 import { RESULT_SERVICE } from '../app.constants';
 import { ClientProxy } from '@nestjs/microservices';
 import { Public } from '../decorators/public.decorators';
-import { GET_RESULTS_PATTERN } from '../app.patterns';
+import { GET_RESULTS_PATTERN, POLL_PROJECTION_PATTERN } from '../app.patterns';
 
 @Controller('result')
 export class ResultController {
@@ -12,5 +12,11 @@ export class ResultController {
   @Public()
   sendAnswer(@Param('id') pollId: string) {
     return this.clientProxy.send(GET_RESULTS_PATTERN, { pollId });
+  }
+
+  @Get(':id/projection')
+  @Public()
+  pollProjection(@Param('id') pollId: string) {
+    return this.clientProxy.send(POLL_PROJECTION_PATTERN, { pollId });
   }
 }

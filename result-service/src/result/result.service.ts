@@ -1,12 +1,17 @@
 import { CACHE_MANAGER, Inject, Injectable, Logger } from '@nestjs/common';
 import { Cache } from 'cache-manager';
-import { RpcException } from '@nestjs/microservices';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { ExistingAnswersDto } from '../../dist/result/dto/existing-answers.dto';
 import { IncomingAnswerDto } from './dto/incoming-answer.dto';
+import { ANSWER_SERVICE } from '../app.constants';
+import { ANSWER_POLL_PROJECTION_PATTERN } from '../app.patterns';
 
 @Injectable()
 export class ResultService {
-  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
+  constructor(
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    @Inject(ANSWER_SERVICE) private clientProxy: ClientProxy,
+  ) {}
   async receiveAnswer(pollId, answers) {
     try {
       Logger.log(
@@ -23,12 +28,11 @@ export class ResultService {
   }
 
   async saveAnswers(pollId, answers) {
-    const denormalizedAnswers = answers.map(({ questionId, answerId }) => ({
-      questionId,
-      answers: {
-        [answerId]: 1,
-      },
-    }));
+    const denormalizedAnswers = {};
+    answers.forEach(({ questionId, answerId }) => {
+      denormalizedAnswers[questionId] = { [answerId]: 1 };
+    });
+    console.log(denormalizedAnswers);
     await this.cacheManager.set(pollId, denormalizedAnswers, { ttl: 99999999 });
     Logger.log(
       `ResultService => New answers saved ${pollId}, ${JSON.stringify(
@@ -42,14 +46,19 @@ export class ResultService {
     incomingAnswers: IncomingAnswerDto[],
     pollId,
   ) {
-    existingAnswers.forEach(({ questionId, answers }) => {
-      incomingAnswers.forEach(
-        ({ questionId: incomingQuestionId, answerId }) => {
-          if (incomingQuestionId === questionId) {
-            answers[answerId] = answers[answerId] ? answers[answerId] + 1 : 1;
-          }
-        },
-      );
+    Logger.log(existingAnswers);
+    Logger.log(incomingAnswers);
+    incomingAnswers.forEach(({ questionId, answerId }) => {
+      if (existingAnswers[questionId]) {
+        existingAnswers[questionId][answerId] = existingAnswers[questionId][
+          answerId
+        ]
+          ? existingAnswers[questionId][answerId] + 1
+          : 1;
+      } else {
+        existingAnswers[questionId] = {};
+        existingAnswers[questionId][answerId] = 1;
+      }
     });
     Logger.log(
       `ResultService => Answers updated ${pollId}, ${existingAnswers}`,
@@ -59,5 +68,17 @@ export class ResultService {
 
   async getResult(pollId) {
     return await this.cacheManager.get(pollId);
+  }
+
+  async pollProjection(pollId) {
+    await this.cacheManager.reset();
+    const answers = await this.clientProxy
+      .send(ANSWER_POLL_PROJECTION_PATTERN, {
+        pollId,
+      })
+      .toPromise();
+    if (answers)
+      return await this.cacheManager.set(pollId, answers, { ttl: 99999999 });
+    throw new RpcException('PROJECTION_ERROR');
   }
 }

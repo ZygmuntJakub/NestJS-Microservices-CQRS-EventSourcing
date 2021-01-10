@@ -11,7 +11,6 @@ export class CommonExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
     const request = ctx.getRequest();
-
     const status = exception?.message
       ? HttpStatus.NOT_FOUND
       : HttpStatus.INTERNAL_SERVER_ERROR;

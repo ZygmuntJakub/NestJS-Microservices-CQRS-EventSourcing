@@ -20,3 +20,7 @@ export const GET_INVITATION_POLL_PATTERN = {
 export const SEND_ANSWER_PATTERN = { role: 'answer', cmd: 'send-answer' };
 
 export const GET_RESULTS_PATTERN = { role: 'result', cmd: 'get-results' };
+export const POLL_PROJECTION_PATTERN = {
+  role: 'result',
+  cmd: 'poll-projection',
+};

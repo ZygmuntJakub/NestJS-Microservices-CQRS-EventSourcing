@@ -3,7 +3,6 @@ import { AnswerController } from './answer.controller';
 import { CqrsModule } from '@nestjs/cqrs';
 import { CommandHandlers } from './commands';
 import { EventHandlers } from './events';
-import { Sagas } from './sagas';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientProxyFactory } from '@nestjs/microservices';
 import { POLL_SERVICE, RESULT_SERVICE } from '../app.constants';

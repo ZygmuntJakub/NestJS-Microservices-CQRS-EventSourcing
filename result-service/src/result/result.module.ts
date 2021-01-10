@@ -3,7 +3,8 @@ import { ResultService } from './result.service';
 import { ResultController } from './result.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from '../config/config';
-import { POSTGRES_CONFIG, REDIS_CONFIG } from '../app.constants';
+import { REDIS_CONFIG, ANSWER_SERVICE } from '../app.constants';
+import { ClientProxyFactory } from '@nestjs/microservices';
 
 @Module({
   imports: [
@@ -17,6 +18,17 @@ import { POSTGRES_CONFIG, REDIS_CONFIG } from '../app.constants';
     }),
   ],
   controllers: [ResultController],
-  providers: [ResultService],
+  providers: [
+    ResultService,
+    {
+      provide: ANSWER_SERVICE,
+      useFactory: (configService: ConfigService) => {
+        const config = configService.get(ANSWER_SERVICE);
+
+        return ClientProxyFactory.create(config);
+      },
+      inject: [ConfigService],
+    },
+  ],
 })
 export class ResultModule {}
