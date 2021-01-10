@@ -1,5 +1,12 @@
 upstream loadbalancer {
 server gateway:8081 weight=5;
+server gateway:8082 weight=5;
+server gateway:8083 weight=5;
+server gateway:8084 weight=5;
+server gateway:8085 weight=5;
+server gateway:8086 weight=5;
+server gateway:8087 weight=5;
+server gateway:8088 weight=5;
 server gateway:8089 weight=5;
 }
 server {
