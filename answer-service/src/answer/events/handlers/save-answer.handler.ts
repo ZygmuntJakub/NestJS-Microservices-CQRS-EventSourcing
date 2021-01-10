@@ -1,7 +1,7 @@
 import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { Logger } from '@nestjs/common';
 import { SaveAnswerEvent } from '../impl/save-answer.event';
-import { SaveAnswerEventError } from '../impl/save-answer.event-error';
+import { SaveAnswerErrorEvent } from '../impl/save-answer-error.event';
 import { Answer } from '../../entities/answer.entity';
 import { SaveAnswerSuccessEvent } from '../impl/save-answer-success.event';
 
@@ -28,7 +28,13 @@ export class SaveAnswerHandler implements IEventHandler<SaveAnswerEvent> {
         `SaveAnswerEvent => End with error save vote ${JSON.stringify(event)}`,
       );
       this.publisher.publish(
-        new SaveAnswerEventError(userId, pollId, answers, retryCounter),
+        new SaveAnswerErrorEvent(
+          userId,
+          pollId,
+          answers,
+          retryCounter,
+          err.code,
+        ),
       );
     }
   }

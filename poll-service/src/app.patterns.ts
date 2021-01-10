@@ -12,3 +12,7 @@ export const GET_INVITATION_POLL_PATTERN = {
   role: 'poll',
   cmd: 'get-invitation-poll',
 };
+export const RESTORE_INVITATION_PATTERN = {
+  role: 'poll',
+  cmd: 'restore-invitation',
+};

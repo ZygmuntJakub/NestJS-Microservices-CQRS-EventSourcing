@@ -65,11 +65,14 @@ export class PollsService {
         const option = question.options.find(({ id }) => id == answerId);
         if (!option) throw new EntityNotFoundError(Option, { id: answerId });
       });
-      const invitationExists = invitations.some(
+      const invitationExists = invitations.find(
         ({ userId: invitationUserId }) => `${userId}` === invitationUserId,
       );
       if (!invitationExists)
         throw new EntityNotFoundError(Invitation, { userId });
+      if (!invitationExists.active)
+        throw new ForbiddenException({ message: 'ALREADY_ANSWERED' });
+      await Invitation.update({ userId, pollId }, { active: false });
     } catch (err) {
       Logger.log(err);
       throw new RpcException(err);
@@ -139,6 +142,15 @@ export class PollsService {
         throw new ForbiddenException({ message: 'POLL_NOT_PUBLISHED' });
       delete poll.invitations;
       return poll;
+    } catch (err) {
+      Logger.log(err);
+      throw new RpcException(err);
+    }
+  }
+
+  async restoreInvitation(userId: string, pollId) {
+    try {
+      return await Invitation.update({ userId, pollId }, { active: true });
     } catch (err) {
       Logger.log(err);
       throw new RpcException(err);

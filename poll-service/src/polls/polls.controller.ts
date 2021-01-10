@@ -15,6 +15,7 @@ import {
   DELETE_POLL_PATTERN,
   CHECK_INVITATIONS_PATTERN,
   GET_INVITATION_POLL_PATTERN,
+  RESTORE_INVITATION_PATTERN,
 } from '../app.patterns';
 
 @Controller()
@@ -65,5 +66,11 @@ export class PollsController {
   getInvitationPoll(@Payload() payload) {
     const { userId, pollId } = payload;
     return this.pollsService.getInvitationPoll(userId, pollId);
+  }
+
+  @MessagePattern(RESTORE_INVITATION_PATTERN)
+  restoreInvitation(@Payload() payload) {
+    const { userId, pollId } = payload;
+    return this.pollsService.restoreInvitation(userId, pollId);
   }
 }
