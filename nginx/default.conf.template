@@ -1,0 +1,9 @@
+upstream loadbalancer {
+server gateway:8081 weight=5;
+server gateway:8089 weight=5;
+}
+server {
+listen 8080;
+location / {
+proxy_pass http://loadbalancer;
+}}

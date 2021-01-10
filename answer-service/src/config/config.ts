@@ -38,7 +38,7 @@ export default () => ({
     username: process.env.POSTGRES_ANSWER_SERVICE_USERNAME,
     password: process.env.POSTGRES_ANSWER_SERVICE_PASSWORD,
     database: process.env.POSTGRES_ANSWER_SERVICE_DB,
-    synchronize: true,
+    synchronize: false,
     logging: true,
     entities: ['dist/**/*.entity{.ts,.js}'],
   },
