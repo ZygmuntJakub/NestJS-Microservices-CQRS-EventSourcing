@@ -5,6 +5,7 @@ import {
   RESULT_SERVICE,
 } from '../app.constants';
 import { Transport } from '@nestjs/microservices';
+import ormconfig from './ormconfig';
 
 export default () => ({
   [POLL_SERVICE]: {
@@ -31,17 +32,7 @@ export default () => ({
       },
     },
   },
-  [POSTGRES_CONFIG]: {
-    type: 'postgres',
-    host: process.env.POSTGRES_ANSWER_SERVICE_DB_HOSTNAME,
-    port: process.env.POSTGRES_ANSWER_SERVICE_DB_PORT,
-    username: process.env.POSTGRES_ANSWER_SERVICE_USERNAME,
-    password: process.env.POSTGRES_ANSWER_SERVICE_PASSWORD,
-    database: process.env.POSTGRES_ANSWER_SERVICE_DB,
-    synchronize: false,
-    logging: true,
-    entities: ['dist/**/*.entity{.ts,.js}'],
-  },
+  [POSTGRES_CONFIG]: ormconfig,
   [RABBITMQ_CONFIG]: {
     transport: Transport.RMQ,
     options: {

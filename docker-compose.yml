@@ -44,7 +44,14 @@ services:
       - gateway-network
     volumes:
       - ./gateway:/gateway/
-#MICROSERVICES
+    depends_on:
+      - rabbitmq
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '0.5'
+#          memory: 1G
+  #MICROSERVICES
   user-service:
     build: ./user-service
     restart: always
@@ -56,6 +63,13 @@ services:
     volumes:
       - ./user-service:/user-service/
       - /user-service/node_modules
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '0.5'
+#          memory: 1G
+    depends_on:
+      - rabbitmq
   auth-service:
     build: ./auth-service
     restart: always
@@ -68,6 +82,13 @@ services:
     volumes:
       - ./auth-service:/auth-service/
       - /auth-service/node_modules
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '0.5'
+#          memory: 1G
+    depends_on:
+      - rabbitmq
   poll-service:
     build: ./poll-service
     restart: always
@@ -80,6 +101,13 @@ services:
     volumes:
       - ./poll-service:/poll-service/
       - /poll-service/node_modules
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '0.5'
+#          memory: 1G
+    depends_on:
+      - rabbitmq
   answer-service:
     build: ./answer-service
     restart: always
@@ -92,6 +120,13 @@ services:
     volumes:
       - ./answer-service:/answer-service/
       - /answer-service/node_modules
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '0.5'
+#          memory: 1G
+    depends_on:
+      - rabbitmq
   result-service:
     build: ./result-service
     restart: always
@@ -104,6 +139,13 @@ services:
     volumes:
       - ./result-service:/result-service/
       - /result-service/node_modules
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '0.5'
+#          memory: 1G
+    depends_on:
+      - rabbitmq
 
 #DATABASES
   user-service-db:
@@ -140,18 +182,6 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_ANSWER_SERVICE_PASSWORD}
     ports:
       - 22224:${POSTGRES_ANSWER_SERVICE_DB_PORT}
-    networks:
-      - services-network
-      - gateway-network
-  result-service-db:
-    image: postgres
-    hostname: ${POSTGRES_RESULT_SERVICE_DB_HOSTNAME}
-    environment:
-      - POSTGRES_DB=${POSTGRES_RESULT_SERVICE_DB}
-      - POSTGRES_USER=${POSTGRES_RESULT_SERVICE_USERNAME}
-      - POSTGRES_PASSWORD=${POSTGRES_RESULT_SERVICE_PASSWORD}
-    ports:
-      - 22225:${POSTGRES_RESULT_SERVICE_DB_PORT}
     networks:
       - services-network
       - gateway-network

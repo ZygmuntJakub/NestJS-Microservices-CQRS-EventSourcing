@@ -1,5 +1,4 @@
 import {
-  POSTGRES_CONFIG,
   RABBITMQ_CONFIG,
   REDIS_CONFIG,
   ANSWER_SERVICE,
@@ -8,17 +7,6 @@ import { Transport } from '@nestjs/microservices';
 import * as redisStore from 'cache-manager-redis-store';
 
 export default () => ({
-  [POSTGRES_CONFIG]: {
-    type: 'postgres',
-    host: process.env.POSTGRES_RESULT_SERVICE_DB_HOSTNAME,
-    port: process.env.POSTGRES_RESULT_SERVICE_DB_PORT,
-    username: process.env.POSTGRES_RESULT_SERVICE_USERNAME,
-    password: process.env.POSTGRES_RESULT_SERVICE_PASSWORD,
-    database: process.env.POSTGRES_RESULT_SERVICE_DB,
-    synchronize: false,
-    logging: true,
-    entities: ['dist/**/*.entity{.ts,.js}'],
-  },
   [REDIS_CONFIG]: {
     store: redisStore,
     host: process.env.REDIS_HOSTNAME,

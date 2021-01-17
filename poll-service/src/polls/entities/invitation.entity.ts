@@ -5,11 +5,9 @@ import {
   Entity,
   ManyToOne,
   PrimaryColumn,
-  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Poll } from './poll.entity';
-import { Unique } from 'typeorm/browser';
 
 @Entity()
 export class Invitation extends BaseEntity {
