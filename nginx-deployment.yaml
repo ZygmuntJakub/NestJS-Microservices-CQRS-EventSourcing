@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: /Users/jakubzygmunt/kompose convert
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: nginx
+  name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: nginx
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: /Users/jakubzygmunt/kompose convert
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/gateway-network: "true"
+        io.kompose.network/services-network: "true"
+        io.kompose.service: nginx
+    spec:
+      containers:
+      - image: zygmuntjakub/nginx:latest
+        imagePullPolicy: ""
+        name: nginx
+        ports:
+        - containerPort: 8080
+        resources:
+          limits:
+            cpu: 400m
+            memory: "1073741824"
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}

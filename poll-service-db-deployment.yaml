@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: /Users/jakubzygmunt/kompose convert
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: poll-service-db
+  name: poll-service-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: poll-service-db
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: /Users/jakubzygmunt/kompose convert
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/gateway-network: "true"
+        io.kompose.network/services-network: "true"
+        io.kompose.service: poll-service-db
+    spec:
+      containers:
+      - env:
+        - name: POSTGRES_DB
+          value: poll_service_db
+        - name: POSTGRES_PASSWORD
+          value: "1234"
+        - name: POSTGRES_USER
+          value: poll_service_db
+        image: postgres
+        imagePullPolicy: ""
+        name: poll-service-db
+        resources:
+          limits:
+            cpu: 400m
+            memory: "1073741824"
+      hostname: poll_service_db
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}

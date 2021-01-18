@@ -1,0 +1,286 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: /Users/jakubzygmunt/kompose convert
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: poll-service
+  name: poll-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: poll-service
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: /Users/jakubzygmunt/kompose convert
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/gateway-network: "true"
+        io.kompose.network/services-network: "true"
+        io.kompose.service: poll-service
+    spec:
+      containers:
+      - env:
+        - name: ANSWER_QUEUE_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: ANSWER_QUEUE_NAME
+              name: env
+        - name: ANSWER_SERVICE_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: ANSWER_SERVICE_HOST
+              name: env
+        - name: ANSWER_SERVICE_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: ANSWER_SERVICE_PORT
+              name: env
+        - name: AUTH_QUEUE_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: AUTH_QUEUE_NAME
+              name: env
+        - name: AUTH_SERVICE_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: AUTH_SERVICE_HOST
+              name: env
+        - name: AUTH_SERVICE_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: AUTH_SERVICE_PORT
+              name: env
+        - name: GATEWAY_SERVICE_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: GATEWAY_SERVICE_HOST
+              name: env
+        - name: GATEWAY_SERVICE_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: GATEWAY_SERVICE_PORT
+              name: env
+        - name: GATEWAY_SERVICE_PORT_END
+          valueFrom:
+            configMapKeyRef:
+              key: GATEWAY_SERVICE_PORT_END
+              name: env
+        - name: JWT_EXPIRES_IN
+          valueFrom:
+            configMapKeyRef:
+              key: JWT_EXPIRES_IN
+              name: env
+        - name: JWT_SECRET
+          valueFrom:
+            configMapKeyRef:
+              key: JWT_SECRET
+              name: env
+        - name: NGINX_PORT_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: NGINX_PORT_HOST
+              name: env
+        - name: NGINX_PORT_IN
+          valueFrom:
+            configMapKeyRef:
+              key: NGINX_PORT_IN
+              name: env
+        - name: NGINX_PORT_OUT
+          valueFrom:
+            configMapKeyRef:
+              key: NGINX_PORT_OUT
+              name: env
+        - name: POLL_QUEUE_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: POLL_QUEUE_NAME
+              name: env
+        - name: POLL_SERVICE_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: POLL_SERVICE_HOST
+              name: env
+        - name: POLL_SERVICE_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: POLL_SERVICE_PORT
+              name: env
+        - name: POSTGRES_ANSWER_SERVICE_DB
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_ANSWER_SERVICE_DB
+              name: env
+        - name: POSTGRES_ANSWER_SERVICE_DB_HOSTNAME
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_ANSWER_SERVICE_DB_HOSTNAME
+              name: env
+        - name: POSTGRES_ANSWER_SERVICE_DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_ANSWER_SERVICE_DB_PORT
+              name: env
+        - name: POSTGRES_ANSWER_SERVICE_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_ANSWER_SERVICE_PASSWORD
+              name: env
+        - name: POSTGRES_ANSWER_SERVICE_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_ANSWER_SERVICE_USERNAME
+              name: env
+        - name: POSTGRES_POLL_SERVICE_DB
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_POLL_SERVICE_DB
+              name: env
+        - name: POSTGRES_POLL_SERVICE_DB_HOSTNAME
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_POLL_SERVICE_DB_HOSTNAME
+              name: env
+        - name: POSTGRES_POLL_SERVICE_DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_POLL_SERVICE_DB_PORT
+              name: env
+        - name: POSTGRES_POLL_SERVICE_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_POLL_SERVICE_PASSWORD
+              name: env
+        - name: POSTGRES_POLL_SERVICE_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_POLL_SERVICE_USERNAME
+              name: env
+        - name: POSTGRES_RESULT_SERVICE_DB
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_RESULT_SERVICE_DB
+              name: env
+        - name: POSTGRES_RESULT_SERVICE_DB_HOSTNAME
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_RESULT_SERVICE_DB_HOSTNAME
+              name: env
+        - name: POSTGRES_RESULT_SERVICE_DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_RESULT_SERVICE_DB_PORT
+              name: env
+        - name: POSTGRES_RESULT_SERVICE_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_RESULT_SERVICE_PASSWORD
+              name: env
+        - name: POSTGRES_RESULT_SERVICE_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_RESULT_SERVICE_USERNAME
+              name: env
+        - name: POSTGRES_USER_SERVICE_DB
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_USER_SERVICE_DB
+              name: env
+        - name: POSTGRES_USER_SERVICE_DB_HOSTNAME
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_USER_SERVICE_DB_HOSTNAME
+              name: env
+        - name: POSTGRES_USER_SERVICE_DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_USER_SERVICE_DB_PORT
+              name: env
+        - name: POSTGRES_USER_SERVICE_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_USER_SERVICE_PASSWORD
+              name: env
+        - name: POSTGRES_USER_SERVICE_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_USER_SERVICE_USERNAME
+              name: env
+        - name: RABBITMQ_DEFAULT_PASS
+          valueFrom:
+            configMapKeyRef:
+              key: RABBITMQ_DEFAULT_PASS
+              name: env
+        - name: RABBITMQ_DEFAULT_USER
+          valueFrom:
+            configMapKeyRef:
+              key: RABBITMQ_DEFAULT_USER
+              name: env
+        - name: RABBITMQ_MG_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: RABBITMQ_MG_PORT
+              name: env
+        - name: RABBITMQ_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: RABBITMQ_PORT
+              name: env
+        - name: REDIS_HOSTNAME
+          valueFrom:
+            configMapKeyRef:
+              key: REDIS_HOSTNAME
+              name: env
+        - name: REDIS_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: REDIS_PORT
+              name: env
+        - name: RESULT_QUEUE_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: RESULT_QUEUE_NAME
+              name: env
+        - name: RESULT_SERVICE_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: RESULT_SERVICE_HOST
+              name: env
+        - name: RESULT_SERVICE_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: RESULT_SERVICE_PORT
+              name: env
+        - name: USER_QUEUE_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: USER_QUEUE_NAME
+              name: env
+        - name: USER_SERVICE_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: USER_SERVICE_HOST
+              name: env
+        - name: USER_SERVICE_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: USER_SERVICE_PORT
+              name: env
+        image: zygmuntjakub/pracainz_poll-service:latest
+        imagePullPolicy: ""
+        name: poll-service
+        resources:
+          limits:
+            cpu: 400m
+            memory: "1073741824"
+      hostname: poll-service
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}

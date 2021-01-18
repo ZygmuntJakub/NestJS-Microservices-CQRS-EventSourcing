@@ -1,77 +1,92 @@
 version: '3'
 services:
   nginx:
-    image: nginx
-    volumes:
-      - ./nginx:/etc/nginx/templates
+    image: zygmuntjakub/nginx:latest
+#    volumes:
+#      - ./nginx:/etc/nginx/templates
     ports:
-      - ${NGINX_PORT_IN}:${NGINX_PORT_OUT}
+      - 8080:8080
     networks:
       - services-network
       - gateway-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.4'
+          memory: 1G
   redis:
     image: 'bitnami/redis:latest'
-    hostname: ${REDIS_HOSTNAME}
+    hostname: redis
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
-      - REDIS_MASTER_PORT_NUMBER=${REDIS_PORT}
+      - REDIS_MASTER_PORT_NUMBER=6379
     networks:
       - services-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.4'
+          memory: 1G
   rabbitmq:
-    image: rabbitmq:management-alpine
-    container_name: rabbitmq
-    hostname: rabbitmq
-    volumes:
-      - /var/lib/rabbitmq
-    ports:
-      - ${RABBITMQ_PORT}:${RABBITMQ_PORT}
-      - ${RABBITMQ_MG_PORT}:${RABBITMQ_MG_PORT}
     env_file:
       - .env
+    image: zygmuntjakub/rabbitmq:latest
+    container_name: rabbitmq
+    hostname: rabbitmq
+#    volumes:
+#      - /var/lib/rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
     networks:
       - services-network
       - gateway-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.4'
+          memory: 1G
   gateway:
-    build: ./gateway
+    image: zygmuntjakub/pracainz_gateway:latest
     restart: always
     hostname: gateway
     env_file:
       - .env
-    ports:
-      - ${GATEWAY_SERVICE_PORT}-${GATEWAY_SERVICE_PORT_END}:${GATEWAY_SERVICE_PORT}
+#    ports:
+#      - 8081-8089:8081
     networks:
       - services-network
       - gateway-network
-    volumes:
-      - ./gateway:/gateway/
+#    volumes:
+#      - ./gateway:/gateway/
     depends_on:
       - rabbitmq
-#    deploy:
-#      resources:
-#        limits:
-#          cpus: '0.5'
-#          memory: 1G
+    deploy:
+      resources:
+        limits:
+          cpus: '0.4'
+          memory: 1G
   #MICROSERVICES
   user-service:
-    build: ./user-service
+    image: zygmuntjakub/pracainz_user-service:latest
     restart: always
     hostname: user-service
     env_file:
       - .env
     networks:
       - services-network
-    volumes:
-      - ./user-service:/user-service/
-      - /user-service/node_modules
-#    deploy:
-#      resources:
-#        limits:
-#          cpus: '0.5'
-#          memory: 1G
+#    volumes:
+#      - ./user-service:/user-service/
+#      - /user-service/node_modules
+    deploy:
+      resources:
+        limits:
+          cpus: '0.4'
+          memory: 1G
     depends_on:
       - rabbitmq
   auth-service:
-    build: ./auth-service
+    image: zygmuntjakub/pracainz_auth-service:latest
     restart: always
     hostname: auth-service
     env_file:
@@ -79,18 +94,18 @@ services:
     networks:
       - services-network
       - gateway-network
-    volumes:
-      - ./auth-service:/auth-service/
-      - /auth-service/node_modules
-#    deploy:
-#      resources:
-#        limits:
-#          cpus: '0.5'
-#          memory: 1G
+#    volumes:
+#      - ./auth-service:/auth-service/
+#      - /auth-service/node_modules
+    deploy:
+      resources:
+        limits:
+          cpus: '0.4'
+          memory: 1G
     depends_on:
       - rabbitmq
   poll-service:
-    build: ./poll-service
+    image: zygmuntjakub/pracainz_poll-service:latest
     restart: always
     hostname: poll-service
     env_file:
@@ -98,18 +113,18 @@ services:
     networks:
       - services-network
       - gateway-network
-    volumes:
-      - ./poll-service:/poll-service/
-      - /poll-service/node_modules
-#    deploy:
-#      resources:
-#        limits:
-#          cpus: '0.5'
-#          memory: 1G
+#    volumes:
+#      - ./poll-service:/poll-service/
+#      - /poll-service/node_modules
+    deploy:
+      resources:
+        limits:
+          cpus: '0.4'
+          memory: 1G
     depends_on:
       - rabbitmq
   answer-service:
-    build: ./answer-service
+    image: zygmuntjakub/pracainz_answer-service:latest
     restart: always
     hostname: answer-service
     env_file:
@@ -117,18 +132,18 @@ services:
     networks:
       - services-network
       - gateway-network
-    volumes:
-      - ./answer-service:/answer-service/
-      - /answer-service/node_modules
-#    deploy:
-#      resources:
-#        limits:
-#          cpus: '0.5'
-#          memory: 1G
+#    volumes:
+#      - ./answer-service:/answer-service/
+#      - /answer-service/node_modules
+    deploy:
+      resources:
+        limits:
+          cpus: '0.4'
+          memory: 1G
     depends_on:
       - rabbitmq
   result-service:
-    build: ./result-service
+    image: zygmuntjakub/pracainz_result-service:latest
     restart: always
     hostname: result-service
     env_file:
@@ -136,55 +151,70 @@ services:
     networks:
       - services-network
       - gateway-network
-    volumes:
-      - ./result-service:/result-service/
-      - /result-service/node_modules
-#    deploy:
-#      resources:
-#        limits:
-#          cpus: '0.5'
-#          memory: 1G
+#    volumes:
+#      - ./result-service:/result-service/
+#      - /result-service/node_modules
+    deploy:
+      resources:
+        limits:
+          cpus: '0.4'
+          memory: 1G
     depends_on:
       - rabbitmq
 
 #DATABASES
   user-service-db:
     image: postgres
-    hostname: ${POSTGRES_USER_SERVICE_DB_HOSTNAME}
+    hostname: user_service_db
     environment:
-      - POSTGRES_DB=${POSTGRES_USER_SERVICE_DB}
-      - POSTGRES_USER=${POSTGRES_USER_SERVICE_USERNAME}
-      - POSTGRES_PASSWORD=${POSTGRES_USER_SERVICE_PASSWORD}
-    ports:
-      - 22222:${POSTGRES_USER_SERVICE_DB_PORT}
+      - POSTGRES_DB=user_service_db
+      - POSTGRES_USER=user_service_db
+      - POSTGRES_PASSWORD=1234
+#    ports:
+#      - 22222:5432
     networks:
       - services-network
       - gateway-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.4'
+          memory: 1G
   poll-service-db:
     image: postgres
-    hostname: ${POSTGRES_POLL_SERVICE_DB_HOSTNAME}
+    hostname: poll_service_db
     environment:
-      - POSTGRES_DB=${POSTGRES_POLL_SERVICE_DB}
-      - POSTGRES_USER=${POSTGRES_POLL_SERVICE_USERNAME}
-      - POSTGRES_PASSWORD=${POSTGRES_POLL_SERVICE_PASSWORD}
-    ports:
-      - 22223:${POSTGRES_POLL_SERVICE_DB_PORT}
+      - POSTGRES_DB=poll_service_db
+      - POSTGRES_USER=poll_service_db
+      - POSTGRES_PASSWORD=1234
+#    ports:
+#      - 22223:5432
     networks:
       - services-network
       - gateway-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.4'
+          memory: 1G
 
   answer-service-db:
     image: postgres
-    hostname: ${POSTGRES_ANSWER_SERVICE_DB_HOSTNAME}
+    hostname: answer_service_db
     environment:
-      - POSTGRES_DB=${POSTGRES_ANSWER_SERVICE_DB}
-      - POSTGRES_USER=${POSTGRES_ANSWER_SERVICE_USERNAME}
-      - POSTGRES_PASSWORD=${POSTGRES_ANSWER_SERVICE_PASSWORD}
-    ports:
-      - 22224:${POSTGRES_ANSWER_SERVICE_DB_PORT}
+      - POSTGRES_DB=answer_service_db
+      - POSTGRES_USER=answer_service_db
+      - POSTGRES_PASSWORD=1234
+#    ports:
+#      - 22224:5432
     networks:
       - services-network
       - gateway-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.4'
+          memory: 1G
 networks:
   services-network:
     internal: true
