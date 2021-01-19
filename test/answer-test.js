@@ -35,12 +35,13 @@ async function update(token, pollId, numberOfParticipants = 100) {
 async function singleVote(times = 50) {
   for (let i = 1; i < times; i++) {
     let token = await auth(`participant-${i}`);
-    await vote(token, "1", [
+    const res = await vote(token, "1", [
       {
         questionId: "1",
         answerId: "2",
       },
     ]);
+    // console.log(res);
   }
 }
 

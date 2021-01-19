@@ -9,6 +9,11 @@ services:
     networks:
       - services-network
       - gateway-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 256M
   redis:
     image: 'bitnami/redis:latest'
     hostname: ${REDIS_HOSTNAME}
@@ -17,6 +22,11 @@ services:
       - REDIS_MASTER_PORT_NUMBER=${REDIS_PORT}
     networks:
       - services-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 256M
   rabbitmq:
     image: rabbitmq:management-alpine
     container_name: rabbitmq
@@ -31,6 +41,11 @@ services:
     networks:
       - services-network
       - gateway-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 256M
   gateway:
     build: ./gateway
     restart: always
@@ -42,15 +57,15 @@ services:
     networks:
       - services-network
       - gateway-network
-    volumes:
-      - ./gateway:/gateway/
+#    volumes:
+#      - ./gateway:/gateway/
     depends_on:
       - rabbitmq
-#    deploy:
-#      resources:
-#        limits:
-#          cpus: '0.5'
-#          memory: 1G
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 256M
   #MICROSERVICES
   user-service:
     build: ./user-service
@@ -60,14 +75,14 @@ services:
       - .env
     networks:
       - services-network
-    volumes:
-      - ./user-service:/user-service/
-      - /user-service/node_modules
-#    deploy:
-#      resources:
-#        limits:
-#          cpus: '0.5'
-#          memory: 1G
+#    volumes:
+#      - ./user-service:/user-service/
+#      - /user-service/node_modules
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 256M
     depends_on:
       - rabbitmq
   auth-service:
@@ -79,14 +94,14 @@ services:
     networks:
       - services-network
       - gateway-network
-    volumes:
-      - ./auth-service:/auth-service/
-      - /auth-service/node_modules
-#    deploy:
-#      resources:
-#        limits:
-#          cpus: '0.5'
-#          memory: 1G
+#    volumes:
+#      - ./auth-service:/auth-service/
+#      - /auth-service/node_modules
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 256M
     depends_on:
       - rabbitmq
   poll-service:
@@ -98,14 +113,14 @@ services:
     networks:
       - services-network
       - gateway-network
-    volumes:
-      - ./poll-service:/poll-service/
-      - /poll-service/node_modules
-#    deploy:
-#      resources:
-#        limits:
-#          cpus: '0.5'
-#          memory: 1G
+#    volumes:
+#      - ./poll-service:/poll-service/
+#      - /poll-service/node_modules
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 256M
     depends_on:
       - rabbitmq
   answer-service:
@@ -117,14 +132,14 @@ services:
     networks:
       - services-network
       - gateway-network
-    volumes:
-      - ./answer-service:/answer-service/
-      - /answer-service/node_modules
-#    deploy:
-#      resources:
-#        limits:
-#          cpus: '0.5'
-#          memory: 1G
+#    volumes:
+#      - ./answer-service:/answer-service/
+#      - /answer-service/node_modules
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 256M
     depends_on:
       - rabbitmq
   result-service:
@@ -136,14 +151,14 @@ services:
     networks:
       - services-network
       - gateway-network
-    volumes:
-      - ./result-service:/result-service/
-      - /result-service/node_modules
-#    deploy:
-#      resources:
-#        limits:
-#          cpus: '0.5'
-#          memory: 1G
+#    volumes:
+#      - ./result-service:/result-service/
+#      - /result-service/node_modules
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 256M
     depends_on:
       - rabbitmq
 
@@ -160,6 +175,11 @@ services:
     networks:
       - services-network
       - gateway-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 256M
   poll-service-db:
     image: postgres
     hostname: ${POSTGRES_POLL_SERVICE_DB_HOSTNAME}
@@ -172,7 +192,11 @@ services:
     networks:
       - services-network
       - gateway-network
-
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 256M
   answer-service-db:
     image: postgres
     hostname: ${POSTGRES_ANSWER_SERVICE_DB_HOSTNAME}
@@ -185,6 +209,11 @@ services:
     networks:
       - services-network
       - gateway-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 256M
 networks:
   services-network:
     internal: true

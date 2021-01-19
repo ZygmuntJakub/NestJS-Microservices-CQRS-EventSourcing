@@ -1,8 +1,8 @@
 import { CACHE_MANAGER, Inject, Injectable, Logger } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
-import { ExistingAnswersDto } from '../../dist/result/dto/existing-answers.dto';
 import { IncomingAnswerDto } from './dto/incoming-answer.dto';
+import { ExistingAnswerDto } from './dto/existing-answer.dto';
 import { ANSWER_SERVICE } from '../app.constants';
 import { ANSWER_POLL_PROJECTION_PATTERN } from '../app.patterns';
 
@@ -42,7 +42,7 @@ export class ResultService {
   }
 
   async updateAnswers(
-    existingAnswers: ExistingAnswersDto[],
+    existingAnswers: ExistingAnswerDto[],
     incomingAnswers: IncomingAnswerDto[],
     pollId,
   ) {
